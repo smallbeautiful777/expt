@@ -1,0 +1,1233 @@
+{\rtf1\ansi\ansicpg936\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 import \{ useState, useEffect, useRef \} from "react";\
+\
+function speak(text, rate=0.85, onEnd) \{\
+  if (!window.speechSynthesis) return;\
+  window.speechSynthesis.cancel();\
+  const utt = new SpeechSynthesisUtterance(text);\
+  utt.lang="en-US"; utt.rate=rate; utt.pitch=1;\
+  const vs=window.speechSynthesis.getVoices();\
+  const v=vs.find(x=>x.lang==="en-US"&&x.name.includes("Samantha"))||vs.find(x=>x.lang==="en-US")||vs.find(x=>x.lang.startsWith("en"));\
+  if(v) utt.voice=v;\
+  if(onEnd) utt.onend=onEnd;\
+  window.speechSynthesis.speak(utt);\
+\}\
+\
+const QB=[\
+\{id:"B1",text:`Scientists haven't found a cure for cancer yet.`\},\
+\{id:"B2",text:`He is not as intelligent as his older brother.`\},\
+\{id:"B3",text:`I remember my mother teaching me the alphabet.`\},\
+\{id:"B4",text:`I love her so much that I can't leave her.`\},\
+\{id:"B5",text:`I've done bad things that I should be punished for.`\},\
+\{id:"B6",text:`I got up early enough to catch the first train.`\},\
+\{id:"B7",text:`Her house is at the foot of a mountain.`\},\
+\{id:"B8",text:`I am looking for a present for my mother.`\},\
+\{id:"B9",text:`This book is for students whose native language is not Japanese.`\},\
+\{id:"B10",text:`He has 3 times as many books as I have.`\},\
+\{id:"B11",text:`She spends a lot of time practicing the piano.`\},\
+\{id:"B12",text:`To the best of my knowledge, the rumor is not true.`\},\
+\{id:"B13",text:`If I were in your place, I would lend him a hand.`\},\
+\{id:"B14",text:`I have a lot of friends to help me.`\},\
+\{id:"B15",text:`She was at a loss for words to express her feeling.`\},\
+\{id:"B16",text:`I am going off to Vancouver next week to see my sister.`\},\
+\{id:"B17",text:`The accident seemed to have something to do with the heavy snow.`\},\
+\{id:"B18",text:`You do your part, and I'll do the rest.`\},\
+\{id:"B19",text:`I have too many things on my mind these days.`\},\
+\{id:"B20",text:`My wife's part-time job brings in a little extra money.`\},\
+\{id:"B21",text:`I'd gladly pay more for something if it's of high quality.`\},\
+\{id:"B22",text:`After a couple of drinks, the guy was feeling no pain.`\},\
+\{id:"B23",text:`I would like to have a cup of coffee.`\},\
+\{id:"B24",text:`You needn't have taken an umbrella with you.`\},\
+\{id:"B25",text:`There are a lot of new buildings here now.`\},\
+\{id:"B26",text:`The coral reef is the region's prime attraction.`\},\
+\{id:"B27",text:`I slept a little during lunch break because I was so tired.`\},\
+\{id:"B28",text:`One million people lost their lives in the war.`\},\
+\{id:"B29",text:`The girl was afraid to jump down from the roof.`\},\
+\{id:"B30",text:`We are out of tissue paper, so I need to go buy some.`\},\
+\{id:"B31",text:`We are looking forward to seeing you and your family.`\},\
+\{id:"B32",text:`It took her a long time to choose a hat.`\},\
+\{id:"B33",text:`You have to get this work finished by noon.`\},\
+\{id:"B34",text:`Please remind me to mail the report tomorrow.`\},\
+\{id:"B35",text:`The more books you read, the more you know.`\},\
+\{id:"B36",text:`It's a good thing to read good books when you are young.`\},\
+\{id:"B37",text:`The assignment took me longer than I had expected.`\},\
+\{id:"B38",text:`The average height of the girls in class is over 155 centimeters.`\},\
+\{id:"B39",text:`She told me that she would go to Paris in August.`\},\
+\{id:"B40",text:`All of a sudden, 3 dogs appeared in front of us.`\},\
+\{id:"B41",text:`He wrote this book at the age of 20.`\},\
+\{id:"B42",text:`All the signs are that she is getting better.`\},\
+\{id:"B43",text:`It is said that treasure is buried in this area.`\},\
+\{id:"B44",text:`An old man was resting in the shade of the tree.`\},\
+\{id:"B45",text:`He always plans a thing out carefully before he does it.`\},\
+\{id:"B46",text:`I don't know what to say to make you feel better.`\},\
+\{id:"B47",text:`This place has a mysterious atmosphere to it.`\},\
+\{id:"B48",text:`He said he was tired, so he would go home early.`\},\
+\{id:"B49",text:`A rabbit has long ears and a short tail.`\},\
+\{id:"B50",text:`I always take a bath before going to bed.`\},\
+\{id:"B51",text:`He should apologize for being rude to the guests.`\},\
+\{id:"B52",text:`It is believed that whales have their own language.`\},\
+\{id:"B53",text:`If you hurry, you will catch up with him.`\},\
+\{id:"B54",text:`I agree with what you say to some extent.`\},\
+\{id:"B55",text:`My cellphone has a built-in digital camera.`\},\
+\{id:"B56",text:`I have to take my medicine every six hours.`\},\
+\{id:"B57",text:`The Tigers lost the game which was a surprise to us.`\},\
+\{id:"B58",text:`She did not visit me on Sunday but on Monday.`\},\
+\{id:"B59",text:`It was raining heavily when I got up this morning.`\},\
+\{id:"B60",text:`I felt a drop of rain on my head.`\},\
+\{id:"B61",text:`I can't put up with that noise any longer.`\},\
+\{id:"B62",text:`He said he did not know the man which was a lie.`\},\
+\{id:"B63",text:`They awarded her first prize at the flower show.`\},\
+\{id:"B64",text:`It is like looking for a needle in the haystack.`\},\
+\{id:"B65",text:`My son is now as tall as I am.`\},\
+\{id:"B66",text:`He has just published an interesting series of articles.`\},\
+\{id:"B67",text:`Some people like red wine and some people like white wine.`\},\
+\{id:"B68",text:`My father will often read the newspaper during meals.`\},\
+\{id:"B69",text:`I thank you from the bottom of my heart.`\},\
+\{id:"B70",text:`According to my calculation, she should be in India by now.`\},\
+\{id:"B71",text:`If he is innocent, it follows that his wife is guilty.`\},\
+\{id:"B72",text:`She went into her room to change her dress.`\},\
+\{id:"B73",text:`We were astonished to hear what had happened.`\},\
+\{id:"B74",text:`This space race was an exciting time in history.`\},\
+\{id:"B75",text:`Ebola spreads from person to person through bodily fluids.`\},\
+\{id:"B76",text:`I couldn't put up with her arrogant behavior.`\},\
+\{id:"B77",text:`Their trip was postponed because of the rain.`\},\
+\{id:"B78",text:`I can't believe your parents let you come here by yourself.`\},\
+\{id:"B79",text:`Some babies learn to swim even before they are one year old.`\},\
+\{id:"B80",text:`He returned home for the first time in ten years.`\},\
+\{id:"B81",text:`I haven't had time to look for what you wanted.`\},\
+\{id:"B82",text:`I told you not to talk about the matter in her presence.`\},\
+\{id:"B83",text:`I was a high school student at that time.`\},\
+\{id:"B84",text:`The fact is that he didn't even take the exam.`\},\
+\{id:"B85",text:`She came to Japan for the purpose of studying Japanese.`\},\
+\{id:"B86",text:`She liked tennis and became a tennis coach.`\},\
+\{id:"B87",text:`The internet is an invaluable source of information.`\},\
+\{id:"B88",text:`I am sure I can find something for you to do.`\},\
+\{id:"B89",text:`I have been living in Canada for almost 5 years.`\},\
+\{id:"B90",text:`He sleeps during the day and works at night.`\},\
+\{id:"B91",text:`He wishes he had gone to the theatre last night.`\},\
+\{id:"B92",text:`I wonder if you have something to write with.`\},\
+\{id:"B93",text:`I've had a lot of work to do lately.`\},\
+\{id:"B94",text:`It's been a long time since we last saw each other.`\},\
+\{id:"B95",text:`Our music teacher advised me to visit Vienna.`\},\
+\{id:"B96",text:`A lot of people swim here in the summer.`\},\
+\{id:"B97",text:`I don't like to go out when it's dark.`\},\
+\{id:"B98",text:`I want to get a haircut before I go on the trip.`\},\
+\{id:"B99",text:`You have to turn in the reports on Monday.`\},\
+\{id:"B100",text:`This book is easy enough for them to read.`\},\
+\{id:"B101",text:`It's your turn to sing.`\},\
+\{id:"B102",text:`Keep in touch!`\},\
+\{id:"B103",text:`We don't have much time.`\},\
+\{id:"B104",text:`What terrible weather!`\},\
+\{id:"B105",text:`Our teacher speaks French as well as English.`\},\
+\{id:"B106",text:`My headache has gone.`\},\
+\{id:"B107",text:`He was absent yesterday.`\},\
+\{id:"B108",text:`I would like to speak with Mr. Smith.`\},\
+\{id:"B109",text:`I need you very much.`\},\
+\{id:"B110",text:`He knocked his knee against the chair.`\},\
+\{id:"B111",text:`You must study hard.`\},\
+\{id:"B112",text:`A strong wind was blowing.`\},\
+\{id:"B113",text:`Are there any other calling plan that offer cheaper rate?`\},\
+\{id:"B114",text:`How much time do we have before the film starts?`\},\
+\{id:"B115",text:`Do you enjoy discussing current events?`\},\
+\{id:"B116",text:`I believe I left my glasses in your car.`\},\
+\{id:"B117",text:`The purpose was defined a long time ago.`\},\
+\{id:"B118",text:`The pictures won't be ready until tomorrow.`\},\
+\{id:"B119",text:`When the fire broke out, no one was in the office.`\},\
+\{id:"B120",text:`During construction, all offices will remain open.`\},\
+\{id:"B121",text:`Feel free to give me your honest opinion.`\},\
+\{id:"B122",text:`Several cables from back and forth under my desk.`\},\
+\{id:"B123",text:`The pay was too low for me to work here anymore.`\},\
+\{id:"B124",text:`I like the way you think, but these proposals are too weird.`\},\
+\{id:"B125",text:`The search for a qualified software engineer has proved difficult.`\},\
+\{id:"B126",text:`Their explanation would be easier to understand if they presented`\},\
+\{id:"B127",text:`Sue's office furniture is both functional and attractive.`\},\
+\{id:"B128",text:`It might be that published formula have 12 random variables.`\},\
+\{id:"B129",text:`I booked us for a skydiving session.`\},\
+\{id:"B130",text:`I can swim well.`\},\
+\{id:"B131",text:`It looks like it's going to be sunny.`\},\
+\{id:"B132",text:`We had a very hot summer this year.`\},\
+\{id:"B133",text:`This beer is not cold enough.`\},\
+\{id:"B134",text:`Here's the ring I was telling you about.`\},\
+\{id:"B135",text:`I lost my job.`\},\
+\{id:"B136",text:`This problem is difficult to solve.`\},\
+\{id:"B137",text:`Let's meet tomorrow at 3:00 pm.`\},\
+\{id:"B138",text:`Tomorrow is my day off.`\},\
+\{id:"B139",text:`There is a fork missing.`\},\
+\{id:"B140",text:`I have to go now.`\},\
+\{id:"B141",text:`You really know how to match your clothes!`\},\
+\{id:"B142",text:`I am running a fever.`\},\
+\{id:"B143",text:`It's really disappointing.`\},\
+\{id:"B144",text:`We have had plenty of snow this year.`\},\
+\{id:"B145",text:`About the time Peter arrived at the office, the power went out.`\},\
+\{id:"B146",text:`Keep me informed, OK?`\},\
+\{id:"B147",text:`I'll need to go to the supermarket to buy ingredients for this`\},\
+\{id:"B148",text:`We have the resources to get the job done.`\},\
+\{id:"B149",text:`Why didn't you say so?`\},\
+\{id:"B150",text:`Peter is a man to be trusted.`\},\
+\{id:"B151",text:`Looking at the two boys, it was clear that they are brothers.`\},\
+\{id:"B152",text:`What time do you like to eat dinner?`\},\
+\{id:"B153",text:`Aren't you the same waiter we had last week?`\},\
+\{id:"B154",text:`I'm thinking that only two of us should attend the presentation.`\},\
+\{id:"B155",text:`As for myself, I'm looking for a more challenging position.`\},\
+\{id:"B156",text:`Although he left 3 messages, John's calls were not returned.`\},\
+\{id:"B157",text:`Older cars are not as reliable as new ones are.`\},\
+\{id:"B158",text:`Discover nature by taking a beautiful walk to the open country.`\},\
+\{id:"B159",text:`Be prepared to give the exact words that appeared on your screen.`\},\
+\{id:"B160",text:`Though some predict that the studio will be sold, nobody really`\},\
+\{id:"B161",text:`The box is almost empty.`\},\
+\{id:"B162",text:`She decided not to attend the meeting.`\},\
+\{id:"B163",text:`I am afraid I spilled the milk on the table.`\},\
+\{id:"B164",text:`This dish tastes bad.`\},\
+\{id:"B165",text:`It's my lucky day.`\},\
+\{id:"B166",text:`I am too busy to help him.`\},\
+\{id:"B167",text:`I'd like to see the doctor soon.`\},\
+\{id:"B168",text:`This book isn't interesting at all.`\},\
+\{id:"B169",text:`I slept 9 hours.`\},\
+\{id:"B170",text:`I think the bigger one is better.`\},\
+\{id:"B171",text:`I lost my pet dog today.`\},\
+\{id:"B172",text:`The first thing you have to take into consideration is time.`\},\
+\{id:"B173",text:`Prices are double what they were ten years ago.`\},\
+\{id:"B174",text:`It took us half an hour to set up the tent.`\},\
+\{id:"B175",text:`I used to play alone when I was a child.`\},\
+\{id:"B176",text:`Our teacher has a wonderful sense of humor.`\},\
+\{id:"B177",text:`What are your views on the situation?`\},\
+\{id:"B178",text:`It's better than lying down.`\},\
+\{id:"B179",text:`We won't be able to finish this today.`\},\
+\{id:"B180",text:`Do you prefer a seat by the window?`\},\
+\{id:"B181",text:`This report isn't very easy to read.`\},\
+\{id:"B182",text:`My students are very curious about life in other countries.`\},\
+\{id:"B183",text:`Just between you and me, I don't like the new manager.`\},\
+\{id:"B184",text:`I come to realize that we need to change our methods.`\},\
+\{id:"B185",text:`Check at the front deck before you take a seat.`\},\
+\{id:"B186",text:`I'm sorry but I have to reschedule our Wednesday meeting.`\},\
+\{id:"B187",text:`The pay was too low for me to work there anymore.`\},\
+\{id:"B188",text:`I'm sorry to have to tell you that this watch can't be repaired.`\},\
+\{id:"B189",text:`Mark was certain he hadn't ordered that particular item.`\},\
+\{id:"B190",text:`The new president touched down several controversial topics during`\},\
+\{id:"B191",text:`That tree has been in the town square for over 300 years.`\},\
+\{id:"B192",text:`A model for powerful new system is currently being built.`\},\
+\{id:"B193",text:`He is going to be a doctor when he grows up.`\},\
+\{id:"B194",text:`I swear I will never do such a thing.`\},\
+\{id:"B195",text:`I made a bet that she would win the game.`\},\
+\{id:"B196",text:`There is no admission fee for children under 5.`\},\
+\{id:"B197",text:`I would like to retract my previous statement.`\},\
+\{id:"B198",text:`I don't want to be involved in that matter.`\},\
+\{id:"B199",text:`It's very big of you to admit you are wrong.`\},\
+\{id:"B200",text:`With your approval, I would like to offer him the job.`\},\
+\{id:"B201",text:`That's the computer on which he writes his articles.`\},\
+\{id:"B202",text:`I am not a university student, but I am brighter than them.`\},\
+\{id:"B203",text:`In a crisis, you must get in touch with your teacher.`\},\
+\{id:"B204",text:`I am going to my room where I can study.`\},\
+\{id:"B205",text:`I hate when other people make me wait a long time.`\},\
+\{id:"B206",text:`Two months have passed since he left for France.`\},\
+\{id:"B207",text:`Fluency in English is a very marketable skill today.`\},\
+\{id:"B208",text:`This is the house I lived in when I was young.`\},\
+\{id:"B209",text:`Please leave your shoes at the door.`\},\
+\{id:"B210",text:`I really need a pen that writes neatly.`\},\
+\{id:"B211",text:`I need to buy a battery for my mobile phone.`\},\
+\{id:"B212",text:`That is the way we wanted it.`\},\
+\{id:"B213",text:`Here is the letter you are waiting for.`\},\
+\{id:"B214",text:`It looks like everyone is gone for the morning.`\},\
+\{id:"B215",text:`Lost and found is on the ground floor.`\},\
+\{id:"B216",text:`Don't make a decision until you think things through carefully.`\},\
+\{id:"B217",text:`We have 3 openings in our shipping department.`\},\
+\{id:"B218",text:`Your request can be dealt with in one to three days.`\},\
+\{id:"B219",text:`The dog lay by the door chewing on a bone.`\},\
+\{id:"B220",text:`The engineer meeting will start probably at 9.`\},\
+\{id:"B221",text:`Patrick doesn't really care much for spicy food.`\},\
+\{id:"B222",text:`Protective glasses should be worn all time in this room.`\},\
+\{id:"B223",text:`I heard that they make quite a large profit from that sale.`\},\
+\{id:"B224",text:`Who brought out the question of layoffs at the stuff meeting?`\},\
+\{id:"B225",text:`The clothes are dirty.`\},\
+\{id:"B226",text:`Do you like chocolate?`\},\
+\{id:"B227",text:`Welcome to the world of electronic books.`\},\
+\{id:"B228",text:`They don't care what color it is.`\},\
+\{id:"B229",text:`I love watching movies in the theater.`\},\
+\{id:"B230",text:`It's not a problem.`\},\
+\{id:"B231",text:`I need to clean the house before my friends come.`\},\
+\{id:"B232",text:`I don't know where it is. But I'm sure we can find it.`\},\
+\{id:"B233",text:`I haven't seen her in over 10 years.`\},\
+\{id:"B234",text:`Do you want to share a few dishes?`\},\
+\{id:"B235",text:`Not many people look past the first page.`\},\
+\{id:"B236",text:`Come and see me if you really want to.`\},\
+\{id:"B237",text:`Is there anything I can do to help you with that?`\},\
+\{id:"B238",text:`My keys are in your bag.`\},\
+\{id:"B239",text:`Fortunately, there are houses nearby.`\},\
+\{id:"B240",text:`I can't get my eyes open.`\},\
+\{id:"B241",text:`It's too big for me.`\},\
+\{id:"B242",text:`Where does the smell come from?`\},\
+\{id:"B243",text:`The chicken is too spicy.`\},\
+\{id:"B244",text:`All the clothes are dirty.`\},\
+\{id:"B245",text:`I hope to have a new blanket.`\},\
+\{id:"B246",text:`I haven't had my breakfast yet.`\},\
+\{id:"B247",text:`What street do you live on?`\},\
+\{id:"B248",text:`Don't let me down.`\},\
+\{id:"B249",text:`When was the meeting?`\},\
+\{id:"B250",text:`I need a clean towel.`\},\
+\{id:"B251",text:`What color is it?`\},\
+\{id:"B252",text:`There is a glass on the floor.`\},\
+\{id:"B253",text:`All the classmates are French.`\},\
+\{id:"B254",text:`She loves her job.`\},\
+\{id:"B255",text:`How long does it take?`\},\
+\{id:"B256",text:`I am so hungry now.`\},\
+\{id:"B257",text:`I almost missed the bus.`\},\
+\{id:"B258",text:`The lecture is clear enough.`\},\
+\{id:"B259",text:`Do you get along with your colleague?`\},\
+\{id:"B260",text:`They're very nice people.`\},\
+\{id:"B261",text:`The shirt is too big.`\},\
+\{id:"B262",text:`Do you like this yellow shirt?`\},\
+\{id:"B263",text:`We need 3 eggs and 2 onions.`\},\
+\{id:"B264",text:`You should bring your family.`\},\
+\{id:"B265",text:`The house on the corner is beautiful.`\},\
+\{id:"B266",text:`How long does it take to get home?`\},\
+\{id:"B267",text:`I haven't seen her for ten years.`\},\
+\{id:"B268",text:`Can we bring 2 pencils on the desk?`\},\
+\{id:"B269",text:`I'm sorry, I can't come this Wednesday.`\},\
+\{id:"B270",text:`The children are playing in the park.`\},\
+\{id:"B271",text:`Don't forget your hat and gloves.`\},\
+\{id:"B272",text:`I'd like to eat breakfast before we go.`\},\
+\{id:"B273",text:`The alarm is not loud enough.`\},\
+\{id:"B274",text:`The chicken you made last night was too spicy.`\},\
+\{id:"B275",text:`I prefer to listen to the news on the radio.`\},\
+\{id:"B276",text:`How many classes are you taking?`\}\
+];\
+\
+const QC=[\
+\{id:"C1",s:`That / don't / do`,a:`Don't do that!`\},\
+\{id:"C2",s:`We / paper and envelops / need`,a:`We need paper and envelops.`\},\
+\{id:"C3",s:`No sign / we could see / of the restaurant`,a:`We could see no sign of the restaurant.`\},\
+\{id:"C4",s:`To the table / brought the hot coffee / the waiter`,a:`The waiter brought the hot coffee to the table.`\},\
+\{id:"C5",s:`And study / get up early / he would often`,a:`He would often get up early and study.`\},\
+\{id:"C6",s:`Without a reason / Professor Jackson / never does anything`,a:`Professor Jackson never does anything without a reason.`\},\
+\{id:"C7",s:`No help / I expect / from Jerry`,a:`I expect no help from Jerry.`\},\
+\{id:"C8",s:`Their claim / to anyone / have they reported`,a:`Have they reported their claim to anyone?`\},\
+\{id:"C9",s:`You friends / do you want / to find out`,a:`Do you want to find out your friends?`\},\
+\{id:"C10",s:`Sign up / when fewer than 12 / the cost will increase`,a:`The cost will increase when fewer than 12 sign up.`\},\
+\{id:"C11",s:`Are they / where / going`,a:`Where are they going?`\},\
+\{id:"C12",s:`Will someone / the package / open`,a:`Will someone open the package?`\},\
+\{id:"C13",s:`To visit us / that she was planning / my sister said`,a:`My sister said that she was planning to visit us.`\},\
+\{id:"C14",s:`A party / are planning / the neighbors`,a:`The neighbors are planning a party.`\},\
+\{id:"C15",s:`Needs / salt / this dish`,a:`This dish needs salt.`\},\
+\{id:"C16",s:`To change our minds / we could be / easily persuaded`,a:`We could be easily persuaded to change our minds.`\},\
+\{id:"C17",s:`And went home / his tools / John collected`,a:`John collected his tools and went home.`\},\
+\{id:"C18",s:`The guitar / of learning to play / Charlie is thinking`,a:`Charlie is thinking of learning to play the guitar.`\},\
+\{id:"C19",s:`The cake / serve / with ice cream`,a:`Serve the cake with ice cream!`\},\
+\{id:"C20",s:`Began to worry / everyone in his family / his behavior`,a:`Everyone in his family began to worry his behavior.`\},\
+\{id:"C21",s:`Complains / Peter / never`,a:`Peter never complains.`\},\
+\{id:"C22",s:`Will be / discussed / requirements`,a:`Requirements will be discussed.`\},\
+\{id:"C23",s:`Next week / opens / the new theatre`,a:`The new theatre opens next week.`\},\
+\{id:"C24",s:`Support / her position / most organizations`,a:`Most organizations support her position.`\},\
+\{id:"C25",s:`Was very helpful / the car dealer / she told us`,a:`She told us the car dealer was very helpful.`\},\
+\{id:"C26",s:`That doctor / concerned / looks`,a:`That doctor looks concerned.`\},\
+\{id:"C27",s:`Caused / a terrible accident / his son's careless driving`,a:`His son's careless driving caused a terrible accident.`\},\
+\{id:"C28",s:`The guitar / of learning to play / Charlie is thinking`,a:`Charlie is thinking of learning to play the guitar.`\},\
+\{id:"C29",s:`Can they enforce / about not allowing pets / the rule`,a:`Can they enforce the rule about not allowing pets?`\},\
+\{id:"C30",s:`To be caught / David is too clever / with a missing money`,a:`David is too clever to be caught with a missing money.`\},\
+\{id:"C31",s:`A house / might buy / he`,a:`He might buy a house.`\},\
+\{id:"C32",s:`They / houses / wanted to build`,a:`They wanted to build houses.`\},\
+\{id:"C33",s:`Their team / can join / anybody`,a:`Anybody can join their team.`\},\
+\{id:"C34",s:`Support / her position / most organizations`,a:`Most organizations support her position.`\},\
+\{id:"C35",s:`Should be equipped / with a black box / every airplane`,a:`Every airplane should be equipped with a black box.`\},\
+\{id:"C36",s:`To play indoors / their mother told them / they were not allowed`,a:`Their mother told them they were not allowed to play indoors.`\},\
+\{id:"C37",s:`In the corner / looked at me / the strange little man`,a:`The strange little man in the corner looked at me.`\},\
+\{id:"C38",s:`Their mother was upset / in school / about their poor performance`,a:`Their mother was upset about their poor performance in school.`\},\
+\{id:"C39",s:`Why we left / to know / they wanted`,a:`They wanted to know why we left.`\},\
+\{id:"C40",s:`Began to worry / everyone in his family / his behavior`,a:`Everyone in his family began to worry his behavior.`\},\
+\{id:"C41",s:`A great player / that boy / may become`,a:`That boy may become a great player.`\},\
+\{id:"C42",s:`Argue / about it / don't`,a:`Don't argue about it.`\},\
+\{id:"C43",s:`Batteries / I never have / the right size`,a:`I never have the right size batteries.`\},\
+\{id:"C44",s:`That iron / be careful / not to touch`,a:`Be careful not to touch that iron.`\},\
+\{id:"C45",s:`To leave / before noon / three of them needed`,a:`Three of them needed to leave before noon.`\},\
+\{id:"C46",s:`And 4 chairs / a dining table / we just bought`,a:`We just bought a dining table and 4 chairs.`\},\
+\{id:"C47",s:`To thank you / that we forgot / we are sorry`,a:`We are sorry that we forgot to thank you.`\},\
+\{id:"C48",s:`Sensors / the snow / may damage`,a:`The snow may damage sensors.`\},\
+\{id:"C49",s:`Were expecting a visit / the two students / from their professor`,a:`The two students were expecting a visit from their professor.`\},\
+\{id:"C50",s:`The couples / to become close friends / were not likely`,a:`The couples were not likely to become close friends.`\},\
+\{id:"C51",s:`My boss / to California / was transferred`,a:`My boss was transferred to California.`\},\
+\{id:"C52",s:`A recent photo / I sent you / I am sure`,a:`I am sure I sent you a recent photo.`\},\
+\{id:"C53",s:`The music will / in a few minutes / begin again`,a:`The music will begin again in a few minutes.`\},\
+\{id:"C54",s:`Our cousin / to the door / was pointing`,a:`Our cousin was pointing to the door.`\},\
+\{id:"C55",s:`For / register / classes`,a:`Register for classes.`\},\
+\{id:"C56",s:`With my car / anything wrong / the mechanic couldn't find`,a:`The mechanic couldn't find anything wrong with my car.`\},\
+\{id:"C57",s:`Nobody knows for sure / that night / what occurred`,a:`Nobody knows for sure what occurred that night.`\},\
+\{id:"C58",s:`To swim / his grandma was fifty / when she learnt`,a:`His grandma was fifty when she learnt to swim.`\},\
+\{id:"C59",s:`With twice the number / I had expected / the total`,a:`I had expected the total with twice the number.`\},\
+\{id:"C60",s:`Nobody truly understood / her staff to do / what she expected`,a:`Nobody truly understood what she expected her staff to do.`\},\
+\{id:"C61",s:`Right / here / stay`,a:`Stay right here!`\},\
+\{id:"C62",s:`As many orders / he will complete / as he can`,a:`He will complete as many orders as he can.`\},\
+\{id:"C63",s:`Loves / bananas / Bob`,a:`Bob loves bananas.`\},\
+\{id:"C64",s:`To another program / the child / had changed the channel`,a:`The child had changed the channel to another program.`\},\
+\{id:"C65",s:`That he was / he told me / afraid of flying`,a:`He told me that he was afraid of flying.`\},\
+\{id:"C66",s:`Needs / salt / this dish`,a:`This dish needs salt.`\},\
+\{id:"C67",s:`A crack / Kathy noticed / in the glass`,a:`Kathy noticed a crack in the glass.`\},\
+\{id:"C68",s:`To release / some unusual data / they were preparing`,a:`They were preparing to release some unusual data.`\},\
+\{id:"C69",s:`The little girl / and cried / spilled her chocolate milk shake`,a:`The little girl spilled her chocolate milk shake and cried.`\},\
+\{id:"C70",s:`Contributes regularly / to her education / dad`,a:`Dad contributes regularly to her education.`\},\
+\{id:"C71",s:`On the table / put / the drinks`,a:`Put the drinks on the table.`\},\
+\{id:"C72",s:`A new battery / my old watch / needs`,a:`My old watch needs a new battery.`\},\
+\{id:"C73",s:`To invite / somebody else / we expected her`,a:`We expected her to invite somebody else.`\},\
+\{id:"C74",s:`To our neighbor's truck / we didn't see / what happened`,a:`We didn't see what happened to our neighbor's truck.`\},\
+\{id:"C75",s:`The painting / someone planned / to steal`,a:`Someone planned to steal the painting.`\},\
+\{id:"C76",s:`The plane / an hour late / had arrived`,a:`The plane had arrived an hour late.`\},\
+\{id:"C77",s:`Is usually warm / in June and July / the weather here`,a:`The weather here is usually warm in June and July.`\},\
+\{id:"C78",s:`Kitty will play / in the concert / her violin`,a:`Kitty will play her violin in the concert.`\},\
+\{id:"C79",s:`Doesn't / help / crying`,a:`Crying doesn't help.`\},\
+\{id:"C80",s:`Use fertilizer / on their crops / farmers`,a:`Farmers use fertilizer on their crops.`\},\
+\{id:"C81",s:`My / smokes / husband`,a:`My husband smokes.`\},\
+\{id:"C82",s:`Will be / discussed / requirements`,a:`Requirements will be discussed.`\},\
+\{id:"C83",s:`A beautiful house / beside the lake / there is`,a:`There is a beautiful house beside the lake.`\},\
+\{id:"C84",s:`City / our / visit`,a:`Visit our city!`\},\
+\{id:"C85",s:`Our friends / as we were finishing / called us`,a:`Our friends called us as we were finishing.`\},\
+\{id:"C86",s:`Is a romantic comedy / about two friends / the movie tonight`,a:`The movie tonight is a romantic comedy about two friends.`\},\
+\{id:"C87",s:`Will delay the flight / it is possible / that the weather`,a:`It is possible that the weather will delay the flight.`\},\
+\{id:"C88",s:`Kept them / away / high prices`,a:`High prices kept them away.`\},\
+\{id:"C89",s:`They burn the leaves / as they could / as carefully`,a:`They burn the leaves as carefully as they could.`\},\
+\{id:"C90",s:`Already / two complaints / we had`,a:`We had already two complaints.`\},\
+\{id:"C91",s:`These / fold / closed`,a:`These fold closed.`\},\
+\{id:"C92",s:`Not inclined / I am / to agree with you`,a:`I am not inclined to agree with you.`\},\
+\{id:"C93",s:`To visit us / that she was planning / my sister said`,a:`My sister said that she was planning to visit us.`\},\
+\{id:"C94",s:`The broken shelf / Jack / is fixing`,a:`Jack is fixing the broken shelf.`\},\
+\{id:"C95",s:`For your host / a small gift / you should bring`,a:`You should bring a small gift for your host.`\},\
+\{id:"C96",s:`And 4 chairs / a dining table / we just bought`,a:`We just bought a dining table and 4 chairs.`\},\
+\{id:"C97",s:`They / early / left`,a:`They left early.`\},\
+\{id:"C98",s:`Were filled with people / the stores / looking for a bargain`,a:`The stores were filled with people looking for a bargain.`\},\
+\{id:"C99",s:`An old boat / to have bought / they seem`,a:`They seem to have bought an old boat.`\},\
+\{id:"C100",s:`Began to worry / everyone in his family / his behavior`,a:`Everyone in his family began to worry his behavior.`\},\
+\{id:"C101",s:`was playing / the piano / Somebody`,a:`Somebody was playing the piano.`\},\
+\{id:"C102",s:`He / new job / Got`,a:`He got new job.`\},\
+\{id:"C103",s:`Get a cat / She should / I don't think`,a:`I don't think she should get a cat.`\},\
+\{id:"C104",s:`See out of / We couldn't / the dirty window`,a:`We couldn't see out of the dirty window.`\},\
+\{id:"C105",s:`a lot of problems / There were / to discuss`,a:`There were a lot of problems to discuss.`\},\
+\{id:"C106",s:`the best book / I ever read / This is`,a:`This is the best book I ever read.`\},\
+\{id:"C107",s:`singer / who is / your favorite`,a:`Who is your favorite singer?`\},\
+\{id:"C108",s:`music / What kind / Do you like`,a:`What kind of music do you like?`\},\
+\{id:"C109",s:`My new / I bought / shoes there`,a:`I bought my new shoes there.`\},\
+\{id:"C110",s:`the party / around fourth / starts`,a:`The party starts around fourth.`\},\
+\{id:"C111",s:`This / one / try`,a:`Try this one.`\},\
+\{id:"C112",s:`Immediately / need to be saved / this documents`,a:`This documents need to be save dimmediately.`\},\
+\{id:"C113",s:`The green one / than the blue one / are more expensive`,a:`The green one are more expensive than the blue one.`\},\
+\{id:"C114",s:`With the receipt / nobody known / what Mark have done`,a:`Nobody known what Mark have done with the receipt.`\},\
+\{id:"C115",s:`Of snow / the messes storm / leak over 14 inches`,a:`The messes storm leak over 14 inches of snow.`\},\
+\{id:"C116",s:`And use few ingredients / are easy to make / most of the recipes`,a:`Most of the recipes are easy to make and use few ingredients.`\},\
+\{id:"C117",s:`Actually know / few of her friends / that she was married`,a:`Few of her friends actually know that she was married.`\},\
+\{id:"C118",s:`How long / staying here / are you?`,a:`How long are you staying here?`\},\
+\{id:"C119",s:`My keys / I can't / find`,a:`I can't find my keys.`\},\
+\{id:"C120",s:`Are you going / what / to wear?`,a:`What are you going to wear?`\},\
+\{id:"C121",s:`This weekend / what / are you doing?`,a:`What are you doing this weekend?`\},\
+\{id:"C122",s:`Selling / the tickets / he is`,a:`He is selling the tickets.`\},\
+\{id:"C123",s:`Too much / I watch / TV`,a:`I watch TV too much.`\},\
+\{id:"C124",s:`A terrible / cold / she has`,a:`She has a terrible cold.`\},\
+\{id:"C125",s:`A story / let me / tell / you`,a:`Let me tell you a story.`\},\
+\{id:"C126",s:`Where / pay for / do I / these books?`,a:`Where do I pay for these books?`\},\
+\{id:"C127",s:`Exactly / you look / like your sister`,a:`You look exactly like your sister.`\},\
+\{id:"C128",s:`Your grandfather / how old / is?`,a:`How old is your grandfather?`\},\
+\{id:"C129",s:`Will you / how long / be there?`,a:`How long will you be there?`\},\
+\{id:"C130",s:`Me / help / could you?`,a:`Could you help me?`\},\
+\{id:"C131",s:`Is / where / my coat?`,a:`Where is my coat?`\},\
+\{id:"C132",s:`Time / a good / have`,a:`Have a good time.`\},\
+\{id:"C133",s:`Was / the wedding / when`,a:`When was the wedding?`\},\
+\{id:"C134",s:`Today / cold / it's really`,a:`It's really cold today.`\},\
+\{id:"C135",s:`Does it / what / mean`,a:`What does it mean?`\},\
+\{id:"C136",s:`Play with / don't / the dog`,a:`Don't play with the dog.`\},\
+\{id:"C137",s:`Interesting / the book / is`,a:`The book is interesting.`\},\
+\{id:"C138",s:`Nice / the weather / should be`,a:`The weather should be nice.`\},\
+\{id:"C139",s:`At the party / you / see`,a:`See you at the party.`\},\
+\{id:"C140",s:`Look / tired / you`,a:`You look tired.`\},\
+\{id:"C141",s:`Anything / see / I couldn't`,a:`I couldn't see anything.`\},\
+\{id:"C142",s:`Cheese / no more / there's / left`,a:`There's no more cheese left.`\},\
+\{id:"C143",s:`We go / should / where?`,a:`Where should we go?`\},\
+\{id:"C144",s:`The fruit / how fresh / is`,a:`How fresh is the fruit?`\},\
+\{id:"C145",s:`Late / woke up / I`,a:`I woke up late.`\},\
+\{id:"C146",s:`Should / where / we meet`,a:`Where should we meet?`\},\
+\{id:"C147",s:`Making dinner / thanks for`,a:`Thanks for making dinner.`\},\
+\{id:"C148",s:`Ever been to / have you / to Europe`,a:`Have you ever been to Europe?`\},\
+\{id:"C149",s:`Next in line / which / one of you / is`,a:`Which one of you is next in line?`\},\
+\{id:"C150",s:`Go out / I don't / want to`,a:`I don't want to go out.`\},\
+\{id:"C151",s:`To see you / it's great / again`,a:`It's great to see you again.`\},\
+\{id:"C152",s:`Smiling at / she's / her mother`,a:`She's smiling at her mother.`\},\
+\{id:"C153",s:`To wear / what are you / going`,a:`What are you going to wear?`\},\
+\{id:"C154",s:`Have any problem / did you`,a:`Did you have any problem?`\}\
+];\
+\
+const QD=[\
+\{id:"D1",dlg:`M: Mary, would you join me for dinner tonight? W: You treated me last weekend. Now it's my turn. Shall we try something Italian?`,q:`What do we learn from the conversation?`,a:`The woman will treat the man to dinner.`\},\
+\{id:"D2",dlg:`W: Good afternoon. I'm calling to inquire about the four-bedroom house you advertised in the newspaper. M: I'm sorry, but it's already sold.`,q:`What do we learn about the house from the conversation?`,a:`The house is already sold.`\},\
+\{id:"D3",dlg:`W: John, what are you doing on your computer? Don't you remember your promise? M: This is not a game. It's only a crossword puzzle. They help increase my vocabulary.`,q:`What is the probable relationship between the speakers?`,a:`Mother and son.`\},\
+\{id:"D4",dlg:`M: Do you still keep in touch with your parents regularly after all these years? W: Yes, of course. I call them at weekends when the rates are down 50%.`,q:`What do we learn about the woman from the conversation?`,a:`She calls her parents at weekends (when the rates are down 50%).`\},\
+\{id:"D5",dlg:`M: Hurry, there's a bus coming. W: Why run? There will be another one in two or three minutes.`,q:`What does the woman mean?`,a:`There's no need to hurry because another bus is coming in two or three minutes.`\},\
+\{id:"D6",dlg:`M: Wow, that's a big assignment we've got for the English class. W: Well, it's not as bad as it looks. It isn't due until Thursday morning.`,q:`What does the woman mean?`,a:`The assignment isn't due until Thursday morning.`\},\
+\{id:"D7",dlg:`W: Hello, is that Steve? I'm stuck in a traffic jam. I'm afraid I can't make it before 7 o'clock. M: Never mind. I'll be here waiting for you.`,q:`What do we learn from the conversation?`,a:`The woman will be late and the man will be waiting for her.`\},\
+\{id:"D8",dlg:`M: You really seem to enjoy your literature class. W: You are right. It has opened a new world for me. I'm exposed to the thoughts of some of the world's best writers. I've never read so much in my life.`,q:`What does the woman mean?`,a:`She really enjoys her literature class.`\},\
+\{id:"D9",dlg:`W: I suppose you've bought some gifts for your family. M: Well, I've bought a shirt for my father and two books for my sister, but I haven't decided what to buy for my mother, probably some jewels.`,q:`Who did the man buy the books for?`,a:`His sister.`\},\
+\{id:"D10",dlg:`W: Look! It says they want a junior sales manager, and it seems like it's a big company. M: Do they say anything about experience?`,q:`What are they talking about?`,a:`Job hunting / finding a job.`\},\
+\{id:"D11",dlg:`W: I think we've covered everything. What about a cup of coffee before we move on to the next item? M: Good idea. I really can't wait another minute.`,q:`What does the woman suggest doing?`,a:`Having a cup of coffee.`\},\
+\{id:"D12",dlg:`W: But what happens if it rains? What are we going to do then? M: We'll have to count on good weather, but if it does rain, the whole thing will have to be canceled.`,q:`What do we learn from the conversation?`,a:`If it rains, the whole thing will have to be canceled.`\},\
+\{id:"D13",dlg:`W: You took an optional course this semester, didn't you? How is it going? M: Terrible. It seems like the more the professor talks, the less I understand.`,q:`How does the man feel about the course?`,a:`Terrible.`\},\
+\{id:"D14",dlg:`W: Mark is playing computer games. M: Should he do that when the final exam is drawing near?`,q:`What does the man think Mark should do?`,a:`Review / Prepare for the exam.`\},\
+\{id:"D15",dlg:`M: Jack seems to think that this year's basketball season will be disappointing. W: That's his opinion. Most others think differently.`,q:`What does the woman mean?`,a:`Most people think this year's basketball season will be interesting.`\},\
+\{id:"D16",dlg:`M: Is this the check-in counter for flight 914 to Los Angeles? W: Yes, but I'm sorry the flight is delayed because of a minor mechanical problem.`,q:`What do we learn from this conversation?`,a:`The flight is delayed.`\},\
+\{id:"D17",dlg:`M: Jessica, could you forward this email to all the club members? W: Sorry, the computer broke down this morning. I'll do it for you as soon as I have it fixed.`,q:`What does the woman imply?`,a:`She'll forward the email when the computer is fixed.`\},\
+\{id:"D18",dlg:`W: Did you find the book for your reading assignment in the library? M: It closed before I got there; I had no idea it closes so early on weekends.`,q:`What does the man mean?`,a:`He didn't find the book because he had no idea the library closes so early on weekends.`\},\
+\{id:"D19",dlg:`M: Did you check the power plug and press the play button? W: Yes. The power indicator was on and it was running. But somehow the sound didn't come through.`,q:`What was the woman probably trying to do?`,a:`She's probably playing music.`\},\
+\{id:"D20",dlg:`M: Joanna, I'm awfully sorry. I didn't mean to hurt you. Shall we have a beer and forget the whole thing? W: OK, we can drop it this time, but don't do it again!`,q:`What do we learn from the conversation?`,a:`Joanna forgives the man.`\},\
+\{id:"D21",dlg:`W: Airports are sad places. M: Sometimes, I guess. But we'll keep in touch and I'll fly over to see you at Christmas.`,q:`What are the speakers doing?`,a:`They are saying goodbye at the airport.`\},\
+\{id:"D22",dlg:`M: Are you going to return to your present job after the vacation? W: No, I plan to graduate next semester. That means I will have to be a full-time student.`,q:`What will the woman do?`,a:`She will be a full-time student.`\},\
+\{id:"D23",dlg:`W: John, are you doing research for Professor Williams this semester? M: Actually, I'm working as his teaching assistant.`,q:`What does the man mean?`,a:`He's working as Professor Williams' teaching assistant.`\},\
+\{id:"D24",dlg:`M: I heard there are a few seats left for the show tonight. W: Really? I was under the impression that the tickets were sold out a long time ago.`,q:`What do we know from the woman's reply?`,a:`The tickets were sold out a long time ago.`\},\
+\{id:"D25",dlg:`W: We have a complete range of famous brands here. How about this one? It's an Omega. M: I'm afraid that I'm not interested in watches with metal watchbands.`,q:`What do we know from the conversation?`,a:`The man is not interested in metal watchbands.`\},\
+\{id:"D26",dlg:`W: What did you think of Tokyo? M: Thrilling, but not very attractive. All the buildings are gray and ugly. And it's very crowded.`,q:`What does the man think of Tokyo?`,a:`Thrilling but not very attractive. It's crowded.`\},\
+\{id:"D27",dlg:`W: Drop me at the Manhattan Post Office please. M: Well, that's an hour's ride. Why not just post your mail here?`,q:`Who is the woman probably speaking to?`,a:`A taxi driver.`\},\
+\{id:"D28",dlg:`M: Didn't I tell you over and over again that you wouldn't be able to climb the mountain unless you got enough sleep? W: You did, but I can't help it.`,q:`What do we know from the conversation?`,a:`They are going to climb the mountain but the woman didn't get enough sleep.`\},\
+\{id:"D29",dlg:`W: This apartment has three bedrooms and a bath. Here's the kitchen. M: It seems a little small to me.`,q:`How many rooms are there in the apartment?`,a:`Five.`\},\
+\{id:"D30",dlg:`M: This is a good seat. I'm glad you suggested the move. Here in the front section we can look out and enjoy the scenery. W: You feel the plane moving? Are we taking off now?`,q:`What can be inferred from the conversation?`,a:`They are on a plane and it's taking off.`\},\
+\{id:"D31",dlg:`W: I want to go to the Chinese Visa Office in Central. It's by the Hong Kong Park. Here it's marked on this map. M: OK, I know where you mean.`,q:`Where does the conversation most probably take place?`,a:`On the street.`\},\
+\{id:"D32",dlg:`W: The weather forecast said that we would have another wonderful day tomorrow. Shall we go and climb Mount Tai? M: Good idea. But we'd better leave very early, or else we'll get caught in the traffic.`,q:`What does the man suggest?`,a:`Leave early for Mount Tai (to avoid traffic).`\},\
+\{id:"D33",dlg:`W: You never speak English unless you absolutely have to. I'll help you if you promise to speak nothing but English all the time. M: All right. Maybe I'll do that.`,q:`What can we learn from the conversation?`,a:`The man promises to speak nothing but English. The woman will help the man if he promises.`\},\
+\{id:"D34",dlg:`M: Well, I will take the three-day tour of the island. W: Why not four days?`,q:`What does the woman suggest?`,a:`Take a four-day tour of the island.`\},\
+\{id:"D35",dlg:`W: Can I make personal phone calls during office hours? M: Of course you can. But don't chat over the phone and don't let it hinder your work.`,q:`What does the man mean?`,a:`The woman can make personal calls during office hours as long as it doesn't hinder her work.`\},\
+\{id:"D36",dlg:`M: How long does the journey take if I go by bus? W: It depends on the traffic. I think the Airport Express is your best bet.`,q:`What kind of place is the man probably going to?`,a:`The airport.`\},\
+\{id:"D37",dlg:`M: Excuse me, madam, but did you see an old woman looking for her walking stick? W: An old woman, sir?`,q:`What's the man doing?`,a:`Looking for an old woman.`\},\
+\{id:"D38",dlg:`W: Have you lived here long? M: I guess so. I first came here six years ago. Then one year after that I moved to Boston. But three years ago I was back here again.`,q:`How long has the man lived here all together?`,a:`Four years.`\},\
+\{id:"D39",dlg:`M: Can I join you? I've never done such a thing before. W: You never pay attention to the people around you, not to mention showing concern about this society.`,q:`What does the woman mean?`,a:`She doesn't want the man to join her.`\},\
+\{id:"D40",dlg:`W: When a book is on reserve, a student can go to the reserve room and ask the reserve librarian for the book. The student can have the book for a few hours, and must read it in the library. M: Thank you. I understand now.`,q:`What's the probable job of the woman?`,a:`A librarian.`\},\
+\{id:"D41",dlg:`W: I heard you got full marks in the math exam. Congratulations! M: Thanks. I'm sure you also did a good job.`,q:`What's the probable relationship between the two speakers?`,a:`Classmates.`\},\
+\{id:"D42",dlg:`W: Hi, Tony. How did your experiment go yesterday? M: Well, it wasn't as easy as I had thought. I have to continue doing it tonight.`,q:`What do we learn from the conversation?`,a:`The man has to continue doing the experiment tonight.`\},\
+\{id:"D43",dlg:`M: I hear you are moving into a new apartment soon. W: Yes. But it is more expensive. My present neighbor plays the piano all night long.`,q:`Why is the woman moving?`,a:`Her neighbor plays the piano all night long.`\},\
+\{id:"D44",dlg:`W: Mr. Jones, your student Bill shows great enthusiasm for musical instruments. M: I only wish he showed half as much for his English lessons.`,q:`What do we learn from the conversation about Bill?`,a:`He shows great enthusiasm for musical instruments but not much for English.`\},\
+\{id:"D45",dlg:`W: Oh, dear! I'm starving. I can't walk any farther. M: Let's go to the restaurant across the street and get something to eat.`,q:`Where are the two people?`,a:`On the street.`\},\
+\{id:"D46",dlg:`W: Why didn't you make an appointment to see the doctor last week when you first twisted your ankle? M: The injury didn't seem serious then.`,q:`Why didn't the man see the doctor earlier?`,a:`The injury didn't seem serious then.`\},\
+\{id:"D47",dlg:`M: I wonder if Sue will be here by five o'clock. W: Her husband said she left home at half past four. She should be here at ten after five.`,q:`What time did Sue leave home?`,a:`Half past four.`\},\
+\{id:"D48",dlg:`W: When will you be through with your work, John? M: Who knows? My boss usually finds something for me to do at the last minute.`,q:`What do we learn from the conversation?`,a:`John's boss usually finds something for him to do at the last minute.`\},\
+\{id:"D49",dlg:`M: It's so hard for me to get to the morning class. But I'm going to fail if I keep skipping. I could hardly keep my eyes open before 10:00 a.m. W: Getting up early is a nightmare.`,q:`What can we know from the conversation?`,a:`They don't like to get up early. Getting up early is a nightmare.`\},\
+\{id:"D50",dlg:`M: Hello, this is John Smith. Would you please get me through to Mr. Anderson? W: I'm sorry. He is having a meeting.`,q:`What does the woman mean?`,a:`Mr. Anderson is having a meeting so he can't talk to the man.`\},\
+\{id:"D51",dlg:`W: Please do\\\\... Wait a moment. I don't feel like going out for breakfast. Can we call room service? M: Why not? What would you like for breakfast?`,q:`What will the man do?`,a:`Call room service for breakfast.`\},\
+\{id:"D52",dlg:`W: Hello, I'd like a tourist guide, please. How much is that? M: It's free. There's a map inside.`,q:`Where is the conversation most probably taking place?`,a:`At the tourist service / tourist office.`\},\
+\{id:"D53",dlg:`M: I have to finish four papers in a week, but I'd really have a hard time. W: I've told you it would be better if you prepared your papers at the beginning of the summer holiday.`,q:`What do we learn about the man?`,a:`He has to finish four papers in a week.`\},\
+\{id:"D54",dlg:`M: Say, what time is it? Is it really only seven-fifteen? My watch says eight-fifteen. W: You forgot to set your watch back.`,q:`What time is it now?`,a:`Seven-fifteen.`\},\
+\{id:"D55",dlg:`M: Hi, I'm interested in renting a two-bedroom apartment. W: Okay. If you have a seat, one of our rental agents will be with you in a moment.`,q:`What does the woman mean?`,a:`A rental agent will come in a moment.`\},\
+\{id:"D56",dlg:`M: I'm going on holiday, and I need some foreign currency. W: Cash or traveler's checks?`,q:`What is the probable relationship between the two speakers?`,a:`A bank clerk and a customer.`\},\
+\{id:"D57",dlg:`W: I have to call Kate and tell her about the interview tomorrow afternoon. M: Why bother? You will see her this afternoon at the meeting.`,q:`What does the man mean?`,a:`The woman doesn't have to call Kate.`\},\
+\{id:"D58",dlg:`W: There'll be a meeting for the handicapped the week after next. They decided that every participant should wear a uniform. M: Yeah. I'm the right man up to the designing job.`,q:`What is the man going to do?`,a:`Design a uniform for the handicapped.`\},\
+\{id:"D59",dlg:`W: First, what price range were you interested in? M: Somewhere between \\\\$400 and \\\\$450 a month.`,q:`How much will the man probably have to pay a year?`,a:`\\\\$4,800 to \\\\$5,400 dollars.`\},\
+\{id:"D60",dlg:`M: I have to go to the toilet quite frequently. W: Well, it sounds as if you've picked up a stomach infection. Let's check your temperature and blood pressure.`,q:`What is the probable relationship between the two speakers?`,a:`Doctor and patient.`\},\
+\{id:"D61",dlg:`W: I believe they're on your desk. M: Oh, here they are. My assistant is always putting things in the most unlikely places.`,q:`Why doesn't the man know where the things are?`,a:`His assistant always puts things in the most unlikely places.`\},\
+\{id:"D62",dlg:`M: So\\\\... what did you think about the movie? W: I think this Star Wars episode is an excellent piece of work. But not as good as the previous ones.`,q:`What does the woman say about Star Wars?`,a:`It's excellent but not as good as the previous ones.`\},\
+\{id:"D63",dlg:`W: Dear, I feel hungry now. How about you? M: So do I. Let me call room service. Hello, room service, please send a menu to room 320 right away.`,q:`Where are the two speakers?`,a:`In a hotel.`\},\
+\{id:"D64",dlg:`M: Do you really want that much? You usually only have a cup of milk for breakfast at home. W: Well, it's different. I don't have to fix breakfast here.`,q:`What does the woman mean?`,a:`When she doesn't have to cook, she enjoys the meal more.`\},\
+\{id:"D65",dlg:`W: I heard that you had taken an optional course last semester. How's it going? M: Terrific! The professor really made me in love with biology.`,q:`What did the man imply?`,a:`He really loves biology now. The biology course was terrific/good.`\},\
+\{id:"D66",dlg:`W: Excuse me, I bought this overcoat yesterday. As soon as I put it on, the sleeve fell off. And I've just noticed that the collar is coming off, too! M: Why don't you just sew them back on?`,q:`What can be inferred from the conversation?`,a:`The overcoat is of poor quality.`\},\
+\{id:"D67",dlg:`W: I'll try to get you through. Please give me the number. M: It's 702-6493 and the area code is 17.`,q:`What is the whole telephone number?`,a:`17-702-6493.`\},\
+\{id:"D68",dlg:`M: Can we sit over there? There's a free table by the window. W: Sorry, sir. That table has been reserved.`,q:`What can we learn from the conversation?`,a:`The table by the window has been reserved.`\},\
+\{id:"D69",dlg:`M: Do you have time to stop for lunch? W: Yes, I'm hungry. This snack bar has a good selection and the prices are moderate.`,q:`Where are the two speakers going?`,a:`A snack bar.`\},\
+\{id:"D70",dlg:`M: An interview? I'd like to, Miss Carter, but I'm afraid my schedule is all full. W: It won't take you long, Mr. Josh. Two hours or less will do.`,q:`What can we learn from the conversation?`,a:`The interview will take two hours or less.`\},\
+\{id:"D71",dlg:`M: Oh. Thank you very much. Look, I'm only here for three days. What are the best places to see? W: Well\\\\...Are you interested in visiting some outlying islands? This brochure tells you more.`,q:`Who is the man most probably speaking to?`,a:`A tour guide / travel agent.`\},\
+\{id:"D72",dlg:`W: There's hardly any water in the radiator. That's dangerous, sir. M: Please fill it up with water then.`,q:`What can we know from the conversation?`,a:`The radiator needs to be filled up with water.`\},\
+\{id:"D73",dlg:`Will you go to Beijing next week? Yes. I'm going there by plane.`,q:`How will the man go to Beijing?`,a:`By plane.`\},\
+\{id:"D74",dlg:`What is Lucy doing? She is planting trees with John.`,q:`What is Lucy doing?`,a:`Planting trees with John.`\},\
+\{id:"D75",dlg:`Excuse me. Is there a bank near here? Yes. It's between the hospital and the zoo.`,q:`Where does the man want to go?`,a:`The bank.`\},\
+\{id:"D76",dlg:`Jimmy, shall we go out for a picnic? Good idea. It's sunny today.`,q:`What is the weather like today?`,a:`It's sunny.`\},\
+\{id:"D77",dlg:`Jack, what does your sister do? She works in a middle school. She likes her students very much.`,q:`What is Jack's sister's job?`,a:`She's a teacher.`\},\
+\{id:"D78",dlg:`Tina, which do you like better? A banana or an apple? I prefer a banana.`,q:`What fruit does Tina prefer?`,a:`A banana.`\},\
+\{id:"D79",dlg:`Excuse me. Can I help you? My aunt's birthday is coming. I want to buy her a gift.`,q:`Who will the girl buy a gift for?`,a:`Her aunt.`\},\
+\{id:"D80",dlg:`The book is very interesting. How much is it? It's twelve yuan.`,q:`How much is the book?`,a:`Twelve yuan.`\},\
+\{id:"D81",dlg:`Have you ever been to Japan? Yes, I have been there twice.`,q:`How many times has the man been to Japan?`,a:`Twice.`\},\
+\{id:"D82",dlg:`Betty, are you from England? No, I'm from America. My friend Linda is from England.`,q:`Where does Linda come from?`,a:`England.`\},\
+\{id:"D83",dlg:`Is your husband a lawyer? He is, but he's thinking about getting into politics.`,q:`What does the woman's husband do?`,a:`lawyer`\},\
+\{id:"D84",dlg:`Are you from London? No, but my family lives there. It's so much bigger than Sydney.`,q:`Where does the woman's family live?`,a:`London`\},\
+\{id:"D85",dlg:`Julie has been studying for six hours. is she at the library? No, she's at a coffee shop.`,q:`Where is Julie studying?`,a:`coffee shop`\},\
+\{id:"D86",dlg:`It's quiet here today, isn't it? the neighbors are out of town.`,q:`Why is it quiet?`,a:`the neighbors are out of town.`\},\
+\{id:"D87",dlg:`Can you tell me the time? Two o'clock. My class starts in 15 minutes.`,q:`When will the class start?`,a:`Two-fifteen`\},\
+\{id:"D88",dlg:`Shall we go to the caf\'e9? Sorry I can't. I had to clean the house.`,q:`Why can't the woman go to the caf\'e9?`,a:`The woman had to clean the house.`\},\
+\{id:"D89",dlg:`Do you have some coins for the meter? It is free to park on the central avenue. But it's only free on weekends.`,q:`Where did the man park the car?`,a:`The central avenue`\},\
+\{id:"D90",dlg:`The TV show is boring. Shall we change the channel?`,q:`What program is boring according to the woman?`,a:`The TV show.`\},\
+\{id:"D91",dlg:`Your brother in the photo is tall.`,q:`Who is in the photo?`,a:`Your brother`\}\
+];\
+\
+const QF=[\
+\{id:"F1",t:`Should I turn right or _____ at the next corner?`,a:`left`\},\
+\{id:"F2",t:`He was very sick, so he went to see the _____.`,a:`doctor`\},\
+\{id:"F3",t:`This piano is too _____. I can't lift it.`,a:`heavy`\},\
+\{id:"F4",t:`Do you have this shirt in a larger _____? This one is too small.`,a:`size`\},\
+\{id:"F5",t:`Can you turn the lights _____? I can't see anything.`,a:`on`\},\
+\{id:"F6",t:`My _____ is very small. There's just my mother, father, and me.`,a:`family`\},\
+\{id:"F7",t:`You should eat at least five servings of _____ each day, such as apples and oranges.`,a:`fruits`\},\
+\{id:"F8",t:`He loves music. He _____ five instruments very well.`,a:`plays`\},\
+\{id:"F9",t:`Can you _____ that noise? What is it?`,a:`hear`\},\
+\{id:"F10",t:`When it rains, there are dark _____ in the sky.`,a:`cloud`\},\
+\{id:"F11",t:`The bill wasn't right. I think they _____ a mistake.`,a:`made`\},\
+\{id:"F12",t:`I need to _____ my hotel reservation. I won't be staying there anymore.`,a:`cancel`\},\
+\{id:"F13",t:`I spilled coffee on my shirt. I hope it doesn't leave a`,a:`spot`\},\
+\{id:"F14",t:`An island is surrounded by _____ on all sides.`,a:`trees`\},\
+\{id:"F15",t:`Even if you run really fast, you probably _____ be able to catch the train. It's too late.`,a:`Won't`\},\
+\{id:"F16",t:`His appearance has changed _____ much in the past five years thatI didn't even recognize him when I saw him.`,a:`so`\},\
+\{id:"F17",t:`Please make sure that all seatbelts are securely _____.`,a:`fastened`\},\
+\{id:"F18",t:`You need a parking _____ if you want to leave your car here.`,a:`permission`\},\
+\{id:"F19",t:`I can't _____ what it must be like having to do a task like this all day.`,a:`imagine`\},\
+\{id:"F20",t:`They have _____ away. They 'll be back on Friday.`,a:`gone`\},\
+\{id:"F21",t:`I've _____ _____ the washing machine. It's working ok now.`,a:`cleaned`\},\
+\{id:"F22",t:`Mozart was a _____ _____. He wrote more than 600 pieces of music.`,a:`musician`\},\
+\{id:"F23",t:`Jack lives in Los Angeles. He has _____ there for seven years.`,a:`stayed`\},\
+\{id:"F24",t:`When we got home last night, we found that somebody _____ into the flat.`,a:`broke`\},\
+\{id:"F25",t:`The _____ I work for isn't doing so well this year.`,a:`company`\},\
+\{id:"F26",t:`The _____ of the world is increasing very fast.`,a:`population`\},\
+\{id:"F27",t:`_____ do you go to the dentist?`,a:`when`\},\
+\{id:"F28",t:`Water _____ at 100 degrees Celsius.`,a:`boils`\},\
+\{id:"F29",t:`I just went swimming. That's why my hair is _____wet_____.`,a:`it\uc0\u65311 `\},\
+\{id:"F30",t:`I need to write your first name. How do you _____spell_____ it\uc0\u65311 `,a:`brush`\},\
+\{id:"F31",t:`You have to use a _____ on the test. Pencils are not allowed.`,a:`pen`\},\
+\{id:"F32",t:`You should look both ways before you _____ the Street.`,a:`cross`\},\
+\{id:"F33",t:`She was temporarily _____ by the brightness of the sun.`,a:`blinded`\},\
+\{id:"F34",t:`I _____ my clothes off at the dry cleaner on my way to work this morning.`,a:`dropped`\},\
+\{id:"F35",t:`Her best-selling novel was _____ for several awards.`,a:`nominated`\},\
+\{id:"F36",t:`If you don't _____ the height requirement, you are not allowed to get on the ride.`,a:`meet`\},\
+\{id:"F37",t:`He is running _____ _____: he should have been here half an hour ago.`,a:`fast`\},\
+\{id:"F38",t:`My sister has _____ from surgery very well. The doctor told us that she should be able to go home next week.`,a:`recovered`\},\
+\{id:"F39",t:`I have trouble _____ at night, so I usually wake up very tired.`,a:`sleeping`\},\
+\{id:"F40",t:`Is there a _____ somewhere? I smell smoke.`,a:`fire`\},\
+\{id:"F41",t:`Some people wear _____ to help them see better.`,a:`glasses`\},\
+\{id:"F42",t:`I _____ the whole house. It was so dirty.`,a:`cleaned`\},\
+\{id:"F43",t:`She ran to the corner, but she just _____ the bus, so she had to wait for the next one.`,a:`misses`\},\
+\{id:"F44",t:`I don't have my credit card. I must have _____ it at home.`,a:`left`\},\
+\{id:"F45",t:`How much does the necklace _____? I don't see a price.`,a:`cost`\},\
+\{id:"F46",t:`Do you have any roommates or do you live _____with_____?`,a:`fast`\},\
+\{id:"F47",t:`You are drive too _____.you should slow down.`,a:`fast`\},\
+\{id:"F48",t:`It was so _____ outside that no one wanted to leave the air-conditioned house.`,a:`hot`\},\
+\{id:"F49",t:`The joke was so _____ that he fell on the floor laughing.`,a:`funny`\},\
+\{id:"F50",t:`At the end of the day, the audience _____ their hands very loudly.`,a:`clapped`\}\
+];\
+\
+const QG=[\
+\{id:"G1",text:`I don't like this store.`\},\
+\{id:"G2",text:`Playing tennis is fun.`\},\
+\{id:"G3",text:`That's my dictionary.`\},\
+\{id:"G4",text:`I love my home.`\},\
+\{id:"G5",text:`Tom considered changing his job.`\},\
+\{id:"G6",text:`I'm just doing my best.`\},\
+\{id:"G7",text:`How did you spend your winter vacation?`\},\
+\{id:"G8",text:`Tom is scared of dogs.`\},\
+\{id:"G9",text:`What do you call this?`\},\
+\{id:"G10",text:`I made reservations.`\},\
+\{id:"G11",text:`Whose book is this?`\},\
+\{id:"G12",text:`I felt very safe.`\},\
+\{id:"G13",text:`He loves singing.`\},\
+\{id:"G14",text:`I called Tom for help.`\},\
+\{id:"G15",text:`I am homesick.`\},\
+\{id:"G16",text:`What color is your new car?`\},\
+\{id:"G17",text:`Why did you lie to me?`\},\
+\{id:"G18",text:`She drinks a little wine at times.`\},\
+\{id:"G19",text:`Tell me where you are going.`\},\
+\{id:"G20",text:`I should have listened more carefully.`\},\
+\{id:"G21",text:`I don't want to go to school.`\},\
+\{id:"G22",text:`It happened in Boston.`\},\
+\{id:"G23",text:`You've forgotten your change.`\},\
+\{id:"G24",text:`Where were you that whole time?`\},\
+\{id:"G25",text:`I'm sorry, but I don't understand.`\},\
+\{id:"G26",text:`Nobody is perfect.`\},\
+\{id:"G27",text:`Some animals are active at night.`\},\
+\{id:"G28",text:`You know it doesn't matter.`\},\
+\{id:"G29",text:`To tell the truth, I felt lonely.`\},\
+\{id:"G30",text:`I got injured doing that.`\},\
+\{id:"G31",text:`It's already nine o'clock.`\},\
+\{id:"G32",text:`Have you eaten dinner yet?`\},\
+\{id:"G33",text:`The bag is full.`\},\
+\{id:"G34",text:`I'll stay here until you get back.`\},\
+\{id:"G35",text:`Do you have to work tonight?`\},\
+\{id:"G36",text:`How's the business going?`\},\
+\{id:"G37",text:`My friend works at a supermarket.`\},\
+\{id:"G38",text:`Here is the bill.`\},\
+\{id:"G39",text:`Like father, like son.`\},\
+\{id:"G40",text:`Don't get me wrong.`\},\
+\{id:"G41",text:`It was disappointing.`\},\
+\{id:"G42",text:`I want to see you smile.`\},\
+\{id:"G43",text:`They made fun of Mary.`\},\
+\{id:"G44",text:`He is a native English speaker.`\},\
+\{id:"G45",text:`I'm so glad that you're here.`\},\
+\{id:"G46",text:`He stopped smoking last year.`\},\
+\{id:"G47",text:`Yesterday, I simply couldn't go to work.`\},\
+\{id:"G48",text:`It looks like it's going to rain.`\},\
+\{id:"G49",text:`Every country has its own history.`\},\
+\{id:"G50",text:`I'm kind of surprised.`\},\
+\{id:"G51",text:`What do you think this sentence means?`\},\
+\{id:"G52",text:`I lost my wallet.`\},\
+\{id:"G53",text:`There is no bus service after nine-thirty.`\},\
+\{id:"G54",text:`I hate liars.`\},\
+\{id:"G55",text:`Please tidy up your bedroom.`\},\
+\{id:"G56",text:`She loves singing.`\},\
+\{id:"G57",text:`Don't believe everything people tell you.`\},\
+\{id:"G58",text:`Is that okay?`\},\
+\{id:"G59",text:`Do you like English?`\},\
+\{id:"G60",text:`Was the bank closed?`\},\
+\{id:"G61",text:`Where is the closest hospital?`\},\
+\{id:"G62",text:`Let me help you with that.`\},\
+\{id:"G63",text:`I haven't finished this yet.`\},\
+\{id:"G64",text:`She says she likes flowers.`\},\
+\{id:"G65",text:`Tell me what's going on.`\},\
+\{id:"G66",text:`I wonder if she is married.`\},\
+\{id:"G67",text:`It rarely snows here.`\},\
+\{id:"G68",text:`Everybody loves her.`\},\
+\{id:"G69",text:`Where did you spend your summer?`\},\
+\{id:"G70",text:`Thanks for the warning.`\},\
+\{id:"G71",text:`The eggs are still hot.`\},\
+\{id:"G72",text:`How may I serve you?`\},\
+\{id:"G73",text:`My computer broke yesterday.`\},\
+\{id:"G74",text:`You'll regret it.`\},\
+\{id:"G75",text:`Some water, please.`\},\
+\{id:"G76",text:`Where is the bank?`\},\
+\{id:"G77",text:`He invited me to dinner.`\},\
+\{id:"G78",text:`Our new car is not very big.`\},\
+\{id:"G79",text:`We went to Korea by plane.`\},\
+\{id:"G80",text:`I didn't know that.`\},\
+\{id:"G81",text:`What language was that?`\},\
+\{id:"G82",text:`I would like to visit South Korea.`\},\
+\{id:"G83",text:`Have you ever donated blood?`\},\
+\{id:"G84",text:`Don't eat it.`\},\
+\{id:"G85",text:`Tom looks pretty sleepy.`\},\
+\{id:"G86",text:`I hope that I can do it.`\},\
+\{id:"G87",text:`I always get up at 6.30.`\},\
+\{id:"G88",text:`He kept me waiting.`\},\
+\{id:"G89",text:`Water reflects light.`\},\
+\{id:"G90",text:`I like reading.`\},\
+\{id:"G91",text:`Three people were slightly injured.`\},\
+\{id:"G92",text:`When did you come to Boston?`\},\
+\{id:"G93",text:`What time are you going to work?`\},\
+\{id:"G94",text:`I have a headache.`\},\
+\{id:"G95",text:`I'm getting really tired.`\},\
+\{id:"G96",text:`There are many books in my room.`\},\
+\{id:"G97",text:`Please take me to the hospital.`\},\
+\{id:"G98",text:`Do you want to take a walk?`\},\
+\{id:"G99",text:`We're university students.`\},\
+\{id:"G100",text:`I really like puppies.`\},\
+\{id:"G101",text:`Close your eyes again.`\},\
+\{id:"G102",text:`I like eating fruit for breakfast.`\},\
+\{id:"G103",text:`Are you sleeping?`\},\
+\{id:"G104",text:`Let's hear the rest of the story.`\},\
+\{id:"G105",text:`Five times five is twenty-five.`\},\
+\{id:"G106",text:`I do that almost every day.`\},\
+\{id:"G107",text:`I feel guilty.`\},\
+\{id:"G108",text:`Sorry for being late.`\},\
+\{id:"G109",text:`Leave the book where it is.`\},\
+\{id:"G110",text:`Do you like cooking?`\},\
+\{id:"G111",text:`Do you come here a lot?`\},\
+\{id:"G112",text:`The world is full of problems.`\},\
+\{id:"G113",text:`Why can't they do it?`\},\
+\{id:"G114",text:`I am a Japanese language teacher.`\},\
+\{id:"G115",text:`What do you want to eat?`\},\
+\{id:"G116",text:`I missed the bus.`\},\
+\{id:"G117",text:`This site is useful.`\},\
+\{id:"G118",text:`I felt the same way.`\},\
+\{id:"G119",text:`These scissors don't cut well.`\},\
+\{id:"G120",text:`We'll meet again in October.`\},\
+\{id:"G121",text:`Can I borrow your phone?`\},\
+\{id:"G122",text:`I don't want to throw that away.`\},\
+\{id:"G123",text:`I cannot answer your question.`\},\
+\{id:"G124",text:`Have a good day.`\},\
+\{id:"G125",text:`Turn on the radio.`\},\
+\{id:"G126",text:`I took a walk with my dog.`\},\
+\{id:"G127",text:`Who taught you that?`\},\
+\{id:"G128",text:`Are you going to use this?`\},\
+\{id:"G129",text:`What does it feel like?`\},\
+\{id:"G130",text:`When does your winter vacation begin?`\},\
+\{id:"G131",text:`What kind of work do you do?`\},\
+\{id:"G132",text:`I often borrow books from the library.`\},\
+\{id:"G133",text:`I live in a small apartment.`\},\
+\{id:"G134",text:`Tom's explanation was too complex.`\},\
+\{id:"G135",text:`I didn't ask for your help.`\},\
+\{id:"G136",text:`This house is not for sale.`\},\
+\{id:"G137",text:`I work at a zoo.`\},\
+\{id:"G138",text:`Let's get a group photo.`\},\
+\{id:"G139",text:`There are no stars tonight.`\},\
+\{id:"G140",text:`I like languages.`\},\
+\{id:"G141",text:`I won't permit it.`\},\
+\{id:"G142",text:`I met an old friend by chance.`\},\
+\{id:"G143",text:`Let's do this later.`\},\
+\{id:"G144",text:`Education is the key to success.`\},\
+\{id:"G145",text:`Would you mind if I helped?`\},\
+\{id:"G146",text:`Please tell me when he arrives here.`\},\
+\{id:"G147",text:`It rained throughout the night.`\},\
+\{id:"G148",text:`He went on walking for two hours.`\},\
+\{id:"G149",text:`We've been worried.`\},\
+\{id:"G150",text:`What are you washing?`\},\
+\{id:"G151",text:`I was very busy today.`\},\
+\{id:"G152",text:`Do you hear me?`\},\
+\{id:"G153",text:`Let's go somewhere warm.`\},\
+\{id:"G154",text:`Why are you lying?`\},\
+\{id:"G155",text:`Our wedding is tomorrow.`\},\
+\{id:"G156",text:`Yesterday was a good day.`\},\
+\{id:"G157",text:`I thought something was wrong.`\},\
+\{id:"G158",text:`Take the medicine.`\},\
+\{id:"G159",text:`I like helping others.`\},\
+\{id:"G160",text:`Do you have a nickname?`\},\
+\{id:"G161",text:`They've already met.`\},\
+\{id:"G162",text:`Wait until the music stops.`\},\
+\{id:"G163",text:`Where did she put the book?`\},\
+\{id:"G164",text:`They will join us later.`\},\
+\{id:"G165",text:`I think it's very unlikely, but not impossible.`\},\
+\{id:"G166",text:`They've just moved here.`\},\
+\{id:"G167",text:`Everyone is eager to try out the latest model.`\},\
+\{id:"G168",text:`It's supposed to rain all day tomorrow.`\},\
+\{id:"G169",text:`You can get coffee at that caf\'e9 on the corner.`\},\
+\{id:"G170",text:`I am not exactly sure about what he meant by that.`\},\
+\{id:"G171",text:`My sister just tells me she's coming to visit.`\},\
+\{id:"G172",text:`It's been difficult to get a hold of him lately.`\},\
+\{id:"G173",text:`No one knows which room the meeting will be held in.`\},\
+\{id:"G174",text:`If you write the report, I will review it for you.`\},\
+\{id:"G175",text:`He is a very respectful researcher in the field.`\},\
+\{id:"G176",text:`She usually stays up late and sleeps in.`\}\
+];\
+\
+const QA=[\
+\{id:"A1",text:"My brother's name is Marcus. We live together in New York City. Our apartment is in a nice neighbourhood. There are lots of good restaurants nearby. He is a student at the university. He studies history. He wants to be a professor. He is very busy, but we usually eat out every night. We like to try different food."\},\
+\{id:"A2",text:"Gyms are places people go to exercise. At most gyms, you have to pay to be a member. Once you are a member of a gym, you can go as often as you like. Most gyms have exercise machines and weights. Some gyms even have swimming pools and basketball courts. Many gyms offer fitness classes to their members."\},\
+\{id:"A3",text:"Anna's closet is very messy and disorganized. She has a hard time finding things in it. Last week, she spent two whole days sorting through everything and organizing the closet. She found a lot of old clothes and shoes that she hadn't worn for years. She gave some of the old things to her sister and the others she donated to a charity."\},\
+\{id:"A4",text:"When Lisa came home from work, she found a kitten in front of her door. He was very scared and skinny. So, Lisa took him inside and gave him some food and water. The kitten followed her around all night. Then, he fell asleep on her floor. In the morning, a woman knocked on her door. It was the owner of the kitten."\},\
+\{id:"A5",text:"After many years at the same job, some people need a change. A worker can move to a new field or start a business. There are many things to consider when making a change. One thing is education. Some career changes require more education. Another thing to consider is money. It can be hard to accept a lower salary at a new job."\},\
+\{id:"A6",text:"Salads are delicious. They are also healthy. It is easy to make a salad. You can make a salad with only lettuce and tomatoes. Good tomatoes are very red. You should wash them in water first and you want to use a sharp knife to cut them. Salads taste very good with dressing. You can put the dressing on top of the salad or on the side."\},\
+\{id:"A7",text:"Exercise is very good for your body. It is important to be active every day. There are many ways to exercise. You can walk, run, or play a sport. After a work out, many people feel happy and relaxed. They are usually very healthy. People who work out do not get sick often. They also sleep better because they fall asleep quickly and wake up rested."\},\
+\{id:"A8",text:"Many people like to watch movies in theaters. They buy tickets. Then, they buy snacks and drinks. In the theater, they find seats. During the movie, the lights are off. It is very dark. People do not talk. They are very quiet. After the movie, people like to talk about it. They talk about what they liked and didn't like."\},\
+\{id:"A9",text:"People have been playing the game of chess for hundreds of years. When playing chess, two players take turns moving their pieces on the board. If a player's piece lands on one of the other person's pieces, it is no longer in the game. Each player has a piece called the king. The game is over when a player loses the king."\},\
+\{id:"A10",text:"Many people experience culture shock. It happens when you move to a new and different culture. You have to make a lot of changes and you may feel nervous and confused. You have to meet many new people. Often times you must learn a new language. It is a very natural feeling and usually it does not last long."\},\
+\{id:"A11",text:"Instead of living in houses or apartment buildings, some people live on boats. In some cities, this is very common. The boats that people live on are called houseboats. Some of them are a lot like normal boats. They move around and can travel to new places. Other houseboats are more like normal houses. They are always in the same place."\},\
+\{id:"A12",text:"With the help of technology, we are able to predict the weather. Before technology, people had to use other means. Some people used cows. They thought that if a cow is lying down, it will rain within twelve hours. Before it rains, the air pressure changes and becomes lower. Cows may feel pain in their joints because of the change."\},\
+\{id:"A13",text:"My family bought a new house. It has four bedrooms. Each bedroom has a big closet and two large windows. My bedroom is next to the living room. There is a garden behind the house. I want to grow vegetables in the summer. My parents love the big kitchen. They like to cook for family and friends."\},\
+\{id:"A14",text:"Mali, officially called the Republic of Mali, is a country in West Africa. It is bordered on all sides by other countries. There is no access to the sea. There is a desert in the northern part and it is very flat. In general, the southern part has tropical weather while the north is quite dry. The official language in Mali is French."\},\
+\{id:"A15",text:"A lot of people use email to communicate. There are many benefits to using email. First, it is very fast. When you send an email, it can travel across the world in seconds. Second, it is good for the environment because paper is saved. Also, the fuel needed to deliver paper mail is saved. Finally, it is very easy to use."\},\
+\{id:"A16",text:"Chocolate is a very popular sweet treat enjoyed by people all around the world. It is made from the seeds of a fruit that are processed in a special way and then roasted. Adding milk gives chocolate a creamy texture. Sugar is added to make chocolate taste sweet. Some people like chocolate that isn't very sweet. It's called dark chocolate."\},\
+\{id:"A17",text:"Tennis is a popular sport. It is fun to watch and fun to play. It is also great exercise. You can play tennis with a friend or with a few friends. Both men and women like to play tennis. The game has no time limit, so games can sometimes last for hours. It is hard to find a good tennis court, but you can play it on the grass."\},\
+\{id:"A18",text:"Many people do not like public speaking. They are afraid to speak in front of a large group of people. There are many ways to get better at public speaking. First, it is good to know the room. You should know where to stand and where to set up your computer. Second, it is important to know your audience."\},\
+\{id:"A19",text:"It is never late to learn a language. You can start at any age. There are many reasons to study a new language. Maybe you want to speak with your family or friends. Maybe you want to study abroad. Or maybe you just want to travel. Some people study a language because they like the way it sounds."\},\
+\{id:"A20",text:"Most people work during the day. Some people have jobs that require them to work at night. They sleep during the day. They go to bed when the sun rises. They wake up when the sun sets. This isn't always easy. Some people have trouble sleeping when the sun is out."\},\
+\{id:"A21",text:"Birthday cakes are served on a person's birthday. The cake is decorated with the words Happy Birthday and the person's name. It is a tradition to put one candle for each year that the birthday person is celebrating. After the candles are lit, family members and friends sing Happy Birthday."\},\
+\{id:"A22",text:"Bookstores sell books, magazines, newspapers, calendars, and stationery. Large bookstores have a separate section for children. The bookcases in the children's section are shorter so children can reach the books. Books in bookstores are categorized by subjects. Best-selling books are usually displayed in the front of the store."\},\
+\{id:"A23",text:"Bread has been an important part of people's diets since ancient times. The first bread was made of crushed grains and water thousands of years ago. People baked the dough on hot stones, resulting in flat bread. Later, after people learned how to make bread rise, they constructed ovens. Since then, people have enjoyed many varieties of bread."\},\
+\{id:"A24",text:"A blog is an online website that is like a diary or journal. The word blog is formed by mixing the two words web and log. Many people like to write blogs. They use them to share their thoughts on topics that they care about. A blog can have text, images, and links to other websites."\},\
+\{id:"A25",text:"Traveling by plane is more comfortable than it used to be. In the past, flights were long and bumpy. Today, designers are improving the flying experience. Even though the seats are closer together, the ride is much smoother and quieter. The inside of some planes has changed too. The ceilings are higher. Windows are larger."\},\
+\{id:"A26",text:"Many people travel to Iceland to see the northern lights. Some people stay in small huts made out of glass. In these huts, people can easily see the brilliant light displays when the night sky is painted with bright greens, reds, pinks, and purples. The northern lights can be seen from other places too."\},\
+\{id:"A27",text:"Typically a public library can be used by anyone. Many countries have public libraries. They are different from other libraries such as those at schools or hospitals. Usually anyone can check out books if they have a library card. Some libraries also provide free internet. On weekends, many parents take their children to the library."\},\
+\{id:"A28",text:"Many studies have shown that having a large group of friends boosts your happiness and health. Friendships may even add years to your life. Not having many friends can be a considerable risk to your health. Friends offer encouragement when times are hard."\},\
+\{id:"A29",text:"Pizza is a kind of flat bread that is baked in a very hot oven. The base of a pizza is a simple type of bread made of flour, water, salt, and oil. Most of the time it is topped with tomato sauce and cheese, but many things can be put on a pizza. Although pizza was first made in Italy, it is now popular in many parts of the world."\},\
+\{id:"A30",text:"More and more people want to grow their own fruits and vegetables. As a result, many people are reading about gardening and even taking classes to learn more. Many people who garden live in suburbs, but people who live in cities can also garden. For example, some people plant gardens on their roofs."\},\
+\{id:"A31",text:"A pilot's job is to fly an airplane. Pilots are needed around the world to fly many different types of planes. Only the most experienced pilots work for commercial airlines. Being a pilot can be exciting. Pilots often travel to well-known cities. It is also a big responsibility. Pilots must be able to fly through challenging weather."\},\
+\{id:"A32",text:"A waffle is a food that is typically eaten for breakfast. It is made from flour, water, oil, and eggs. Waffles are usually in the shape of a square, but sometimes they can be round. Many people eat them with eggs and orange juice for breakfast. Others like to eat waffles for dessert. They put fresh fruit and cream on top."\},\
+\{id:"A33",text:"Washington is a state in the far northwest part of the United States. There are mountains in the middle, so it is usually wet in the west and dry in the east. This makes it good for growing many things, such as cherries, apples and pears. There are many trees, so Washington exports a lot of wood to the rest of the world."\},\
+\{id:"A34",text:"New York City is known as the city that never sleeps. That's because the people in this huge urban area seem to be on the go day and night. Trains rumble into stations from dawn to dusk. If you're unlucky enough to live by one of the above-ground trains, you'll probably need to wear earplugs to sleep."\},\
+\{id:"A35",text:"People have been creating maps for thousands of years. Long ago, explorers went around the world and created drawings showing where they had been. Over time, maps got more and more detailed. Maps help us learn about a specific area. We may use a map to figure out which roads to take to get to a new place."\},\
+\{id:"A36",text:"As people get older, it can become harder to remember things. Some research shows that there are ways to prevent memory loss. The first is to eat right and get plenty of exercise. Second, it is important to exercise your mind. This can be done by learning new things. Living a life without a lot of stress is also important."\},\
+\{id:"A37",text:"It can be hard to grow crops in dry climates. When there is not a lot of water, it is important to avoid wasting it. Farmers can do a variety of things to make sure that their plants get enough water. They can water the plants at night when it's cooler. They can also cover the ground with mulch."\},\
+\{id:"A38",text:"Please see the updated course information and reading material that are attached to this message. All students are requested to bring their handouts to every class. The teacher will be bringing a projector, and the classroom is equipped with a screen. Also, remember that there will be an optional film showing after the first class."\},\
+\{id:"A39",text:"Organizations grow or fail according to the effectiveness of their meetings. Group leaders should prepare topics for discussion beforehand. During the meeting, the leader should guide the group in making decisions and assigning follow up tasks. Finally, it's important that all members receive a copy of accurate notes of what was discussed at the meeting."\}\
+];\
+\
+const QH=[\
+\{id:"H1",passage:"As most of you know, tonight and tomorrow we will be replacing the carpet in the lobby. As a result, the office will be closed tomorrow morning until noon. Please work from home until then, and come to the office in the afternoon. Thanks.",model:"We are replacing the carpet in the lobby tonight and tomorrow. Therefore, the office will be closed tomorrow morning. Please work from home and come to the office in the afternoon."\},\
+\{id:"H2",passage:"Sarah's shower is broken. She called a repairman to come and fix it, but he never showed up. She called another repairman, but he isn't available until next week. Sarah will have to use her neighbor's shower until next week.",model:"Sarah's shower is broken, so she called a repairman. The first one didn't show up, and the second one is busy until next week. Sarah has to use her neighbor's shower for now."\},\
+\{id:"H3",passage:"Sam has been living in the same apartment building for many years. He loves the quiet neighborhood. One day, a new neighbor moved in across the hall. The neighbor played the piano for several hours every evening. Sam was very bothered by all of the noise. Finally, he asked his neighbor to play the piano while Sam wasn't at home. The neighbor agreed.",model:"Sam lives in a quiet apartment, but his new neighbor played the piano every night. Sam was very bothered by the noise. Finally, the neighbor agreed to play only when Sam was at work."\},\
+\{id:"H4",passage:"Joseph's parents took a trip. Their house is full of plants, so they asked him to water their plants while they were away. Joseph got very busy. He forgot to water the plants. When his parents came back, all of the plants had died.",model:"Joseph's parents went on a trip. They asked him to water the plants. Joseph was busy and forgot. All the plants died."\},\
+\{id:"H5",passage:"Andrea loves to cook. She wants to write a cookbook with all her favorite recipes. So, she makes dinner every night for her family. After dinner, she asks what they think of the food. Then, she decides if she wants to include the recipe in her cookbook or not.",model:"Andrea loves to cook and wants to write a cookbook. She cooks for her family every night and asks for their feedback to decide which recipes to include."\},\
+\{id:"H6",passage:"David had an exam the next day. So, he stayed up very late studying. In the morning, his alarm went off, but David knocked the alarm to the floor and it broke. Then, David fell asleep again. When he woke up, he had slept well, but he had missed the exam.",model:"David had an exam. He stayed up late to study. In the morning, he broke his alarm clock and fell asleep again. He missed the exam."\},\
+\{id:"H7",passage:"When Lisa came home from work, she found a kitten in front of her door. He was very scared and skinny. So, Lisa took him inside and gave him some food and water. The kitten followed her around all night. In the morning, a woman knocked on her door \'97 it was the owner. Lisa gave the kitten back but was very sad to see him go.",model:"Lisa found a thin kitten at her door. She gave it food and water. The next day, the owner came. Lisa gave the kitten back but felt sad."\},\
+\{id:"H8",passage:"Richard is looking for an apartment to rent. He has been looking for many months, but he cannot find anything in his price range. One day, a friend calls him. She tells him that she is moving and thought he might be interested in her apartment. The rent is in his price range, so Richard calls the landlord. The landlord agrees to rent the apartment to Richard.",model:"Richard wanted a cheap apartment. His friend was moving out and told him about her place. The rent was good. Richard called the landlord and got it."\},\
+\{id:"H9",passage:"Marie owns a restaurant. One night, all of her servers called her and said they were too sick to work. It was a holiday, so Marie knew that it would be a busy night. She called her parents and asked if they could help and work that night. They agreed and did a good job.",model:"Marie owns a restaurant. One night, all her workers were sick. She asked her parents to help. They did a great job."\},\
+\{id:"H10",passage:"A young couple took a trip to China. They asked their friend to take care of their cats while they were away. The friend stayed at their house during the trip. He took care of the cats, but also ate all of the couple's food. When the couple came back, they didn't have any food left, but their cats were happy.",model:"A couple went to China. Their friend looked after their cats at their house. He fed the cats but ate all the couple's food."\},\
+\{id:"H11",passage:"Please join us next Wednesday evening for a talk by our new college president. The talk is free and will be held in the main auditorium. Topics include rising tuition, class sizes, and parking. Please come prepared with questions!",model:"The college president will give a talk next Wednesday. It is free and in the auditorium. Topics include tuition and parking. Please bring questions."\}\
+];\
+\
+const QI=[\
+\{id:"I1",title:"Computers",\
+ passage:"The first computers were very large \'97 some were as big as several rooms. Over time, the technology improved and computers became smaller. Now, personal computers are everywhere. They are supposed to improve the quality of our lives, but they have not made life better.\\n\\nComputers waste a lot of time. Computers are machines, and machines often break. There are many stories about people who have wasted time because of computer problems.\\n\\nComputers also hurt relationships between people. People often sit in front of their computers instead of being with their family and friends. This can damage relationships between people.",\
+ summary:"The author believes that computers do not make our lives better. First, they waste a lot of time when they break. Second, they hurt relationships because people spend less time with family. Therefore, computers can damage our social lives.",\
+ opinion:"I completely agree with the author's opinion for several important reasons.\\n\\nFirst of all, using computers less can provide many benefits to the community. It helps to solve many existing problems. For example, it can save a lot of time and resources for many families.\\n\\nSecondly, when people focus on face-to-face communication, they become more responsible and gain more valuable experience.\\n\\nIn conclusion, I believe we should support the author's idea to create a brighter future for everyone."\},\
+\{id:"I2",title:"Teenagers and Work",\
+ passage:"Schools teach students a lot, but having a job can help students in ways that schools cannot. All teenagers should work while they are in school.\\n\\nTeenagers who have jobs can learn about different job fields. Such experiences make it easier for students to decide what kind of job they should look for when they graduate.\\n\\nStudents who work also learn how to manage their own money. By working hard for their own money, teenagers learn its value. A part-time job provides students with experiences and skills that cannot be taught in school.",\
+ summary:"The author believes that all teenagers should work while they are in school. First, jobs help students learn about different careers. Second, working teaches teenagers how to manage money. Therefore, part-time jobs provide useful life skills.",\
+ opinion:"I completely agree with the author's opinion.\\n\\nFirst of all, working helps students learn real-world skills that schools cannot teach. It helps them make better decisions about their future careers.\\n\\nSecondly, teenagers who work learn the value of money through personal experience. This teaches them to be responsible and self-sufficient.\\n\\nIn conclusion, part-time jobs are an important way for teenagers to prepare for the real world."\},\
+\{id:"I3",title:"Zoos",\
+ passage:"Over the past several years, the number of people visiting zoos has reached record levels. Zoos attract a lot of tourists and families. But they are not the best place for animals to live.\\n\\nA zoo can provide only limited space for each animal. Many zoos keep big cats in very small spaces. Having too little space can be bad for the animals' minds and bodies.\\n\\nIt is also important to understand that zoos can be harmful and even deadly for some animals. Animals from different regions live very close together. They can get sick because they are not used to each other.",\
+ summary:"The author believes that zoos are not the best place for animals. First, zoos provide very limited space. Second, animals can get sick or hurt. Therefore, we should choose other family activities.",\
+ opinion:"I completely agree with the author's opinion.\\n\\nFirst of all, animals in zoos are deprived of the space they need to stay healthy. Animals like bears and big cats need to roam large territories.\\n\\nSecondly, keeping animals from different regions together can lead to the spread of disease.\\n\\nIn conclusion, we should find better ways to appreciate wildlife, such as nature documentaries or responsible wildlife sanctuaries."\},\
+\{id:"I4",title:"Big City vs Countryside",\
+ passage:"Although the countryside can be more peaceful than a big city, it is better for children to grow up in a big city.\\n\\nChildren who grow up in a big city have more opportunities. If a child wants to sing, dance, or play a musical instrument, he or she can easily find different teachers or clubs. In addition, most big cities have excellent museums, zoos, art galleries, and libraries.\\n\\nChildren can also develop a world view in a big city. In big cities, there are people from many different backgrounds. It is good for young people to meet people from different cultures.",\
+ summary:"The author believes it is better for children to grow up in a big city. First, cities offer more opportunities for learning. Second, children can meet different people and develop a world view. Therefore, city life better prepares children for the real world.",\
+ opinion:"I completely agree with the author's opinion.\\n\\nFirst of all, big cities provide access to a wide range of educational resources and cultural experiences that are simply not available in rural areas.\\n\\nSecondly, exposure to diverse cultures helps children develop empathy and open-mindedness from an early age.\\n\\nIn conclusion, despite the peacefulness of the countryside, a big city environment is more beneficial for children's overall development."\},\
+\{id:"I5",title:"Public Transportation",\
+ passage:"Few cities have enough money to pay for all the things they wish to do. Cities should spend more money on improving public transportation than on improving roads for private cars.\\n\\nMany cities are growing more and more each year. The population is rising, which creates congestion. Cities should focus on building public transportation so that congestion is reduced.\\n\\nReducing the number of drivers on the road can also help reduce air pollution. Cars are one of the biggest sources of air pollution, contributing to global climate change.",\
+ summary:"The author believes that cities should spend more money on public transportation. First, it can reduce traffic congestion. Second, it helps reduce air pollution. Therefore, developing buses and trains is very important.",\
+ opinion:"I completely agree with the author's opinion.\\n\\nFirst of all, public transportation reduces traffic congestion and allows cities to use land more efficiently for parks and housing.\\n\\nSecondly, fewer cars on the road means significantly less air pollution, which benefits residents' health and helps address climate change.\\n\\nIn conclusion, every city should prioritize the development of efficient, affordable public transportation systems."\}\
+];\
+\
+const PARTS = \{\
+  A:\{label:"Part A",name:"Read Aloud \uc0\u26391 \u35835 ",color:"#FF6B6B",icon:"\u55357 \u56534 ",pct:"2%",type:"readAloud",qs:QA,\
+     inst:"\uc0\u25353 \u29031 \u23631 \u24149 \u19978 \u26174 \u31034 \u30340 \u21477 \u23376 \u28165 \u26224 \u12289 \u24179 \u31283 \u12289 \u33258 \u28982 \u22320 \u35835 \u20986 \u26469 \u12290 \u27599 \u19968 \u21477 \u26377 30\u31186 \u30340 \u26102 \u38388 \u65292 \u21518 \u26469 \u21477 \u23376 \u36234 \u26469 \u36234 \u38271 \u12290 "\},\
+  B:\{label:"Part B",name:"Repeat Sentence \uc0\u22797 \u36848 \u21477 \u23376 ",color:"#4ECDC4",icon:"\u55357 \u56577 ",pct:"16%",type:"repeat",qs:QB,\
+     inst:"\uc0\u21548 \u21040 \u21477 \u23376 \u21518 \u23613 \u37327 \u20934 \u30830 \u22320 \u22797 \u36848 \u20986 \u26469 \u12290 \u21477 \u23376 \u30001 \u30701 \u21040 \u38271 \u12289 \u30001 \u28165 \u26224 \u21040 \u24555 \u36895 \u65292 \u21518 \u26469 \u20250 \u20986 \u29616 \u28595 \u27954 \u21475 \u38899 \u12290 \u35748 \u30495 \u38598 \u20013 \u21548 \u65292 \u19981 \u29992 \u24778 \u24908 \u12290 "\},\
+  C:\{label:"Part C",name:"Sentence Builds \uc0\u32452 \u21477 ",color:"#A8E6CF",icon:"\u55358 \u56809 ",pct:"10%",type:"sentenceBuild",qs:QC,\
+     inst:"\uc0\u25226 \u21548 \u21040 \u30340 \u25171 \u20081 \u39034 \u24207 \u30340 \u35789 \u32452 \u25490 \u21015 \u25104 \u27491 \u30830 \u30340 \u21477 \u23376 \u12290 "\},\
+  D:\{label:"Part D",name:"Conversation \uc0\u20004 \u20154 \u23545 \u35805 ",color:"#FFB347",icon:"\u55357 \u56492 ",pct:"12%",type:"conversation",qs:QD,\
+     inst:"\uc0\u22312 \u21548 \u23436 \u19968 \u27573 \u20004 \u20154 \u23545 \u35805 \u21518 \u65292 \u20250 \u26377 \u19968 \u20010 \u38382 \u39064 \u12290 \u26681 \u25454 \u23545 \u35805 \u20869 \u23481 \u20570 \u20986 \u31616 \u26126 \u31572 \u26696 \u65292 \u36234 \u30701 \u36234 \u22909 \u65292 \u21482 \u31572 \u20851 \u38190 \u35789 \u23601 \u34892 \u12290 "\},\
+  E:\{label:"Part E",name:"Typing \uc0\u25171 \u23383 ",color:"#DDA0DD",icon:"\u9000 \u65039 ",pct:"1%",type:"typing",qs:QA,\
+     inst:"\uc0\u24744 \u23558 \u22312 60\u31186 \u20869 \u25171 \u20986 \u23631 \u24149 \u19978 \u26174 \u31034 \u30340 \u19968 \u27573 \u25991 \u23383 \u65292 \u23613 \u37327 \u36234 \u22810 \u36234 \u22909 \u12290 \u35201 \u27714 \u24555 \u36895 \u19988 \u20934 \u30830 \u65292 \u26102 \u38388 \u32467 \u26463 \u21069 \u19981 \u35201 \u20572 \u19979 \u26469 \u12290 "\},\
+  F:\{label:"Part F",name:"Sentence Completion \uc0\u21477 \u23376 \u22635 \u31354 ",color:"#FFD93D",icon:"\u9999 \u65039 ",pct:"20%",type:"fillBlank",qs:QF,\
+     inst:"\uc0\u35831 \u22312 \u19968 \u21477 \u35805 \u31354 \u32570 \u30340 \u22320 \u26041 \u22635 \u20889 \u19968 \u20010 \u26368 \u31526 \u21512 \u21477 \u23376 \u24847 \u24605 \u30340 \u21333 \u35789 \u12290 \u21482 \u38656 \u35201 \u22635 \u20889 \u19968 \u20010 \u21333 \u35789 \u12290 \u27599 \u21477 \u35805 \u24744 \u20250 \u26377 25\u31186 \u23436 \u25104 \u12290 "\},\
+  G:\{label:"Part G",name:"Dictation \uc0\u21477 \u23376 \u21548 \u20889 ",color:"#C7CEEA",icon:"\u55356 \u57255 ",pct:"16%",type:"dictation",qs:QG,\
+     inst:"\uc0\u35831 \u23558 \u24744 \u21548 \u21040 \u30340 \u21477 \u23376 \u20934 \u30830 \u22320 \u25171 \u20986 \u26469 \u12290 \u27880 \u24847 \u21333 \u35789 \u25340 \u20889 \u12289 \u26631 \u28857 \u31526 \u21495 \u21644 \u22823 \u23567 \u20889 \u12290 \u27599 \u21477 \u35828 \u20986 \u21518 \u24744 \u26377 25\u31186 \u12290 "\},\
+  H:\{label:"Part H",name:"Passage Reconstruction \uc0\u30701 \u25991 \u21465 \u36848 ",color:"#98D8C8",icon:"\u55357 \u56541 ",pct:"3%",type:"passage",qs:QH,\
+     inst:"\uc0\u24744 \u23558 \u26377 30\u31186 \u38405 \u35835 \u19968 \u27573 \u30701 \u25991 \u65292 30\u31186 \u21518 \u30701 \u25991 \u33258 \u21160 \u28040 \u22833 \u12290 \u24744 \u23558 \u26377 90\u31186 \u25353 \u29031 \u33258 \u24049 \u30340 \u29702 \u35299 \u21465 \u36848 \u36825 \u27573 \u30701 \u25991 \u12290 "\},\
+  I:\{label:"Part I",name:"Summary & Opinion \uc0\u24635 \u32467 \u21644 \u35266 \u28857 ",color:"#FFB6C1",icon:"\u55357 \u56481 ",pct:"1%",type:"summary",qs:QI,\
+     inst:"\uc0\u35835 \u19968 \u31687 \u30701 \u25991 \u12290 \u31532 \u19968 \u26694 \u65306 \u29992 25-50\u20010 \u21333 \u35789 \u24635 \u32467 \u20316 \u32773 \u35266 \u28857 \u65307 \u31532 \u20108 \u26694 \u65306 \u29992 \u33267 \u23569 50\u20010 \u21333 \u35789 \u34920 \u36798 \u24744 \u33258 \u24049 \u30340 \u35266 \u28857 \u65288 \u20855 \u26377 \u25209 \u21028 \u24615 \u65289 \u12290 "\}\
+\};\
+\
+function shuffle(a)\{const b=[...a];for(let i=b.length-1;i>0;i--)\{const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];\}return b;\}\
+\
+const CSS=`\
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');\
+*\{box-sizing:border-box;margin:0;padding:0;\}\
+body\{background:#07101F;color:#DCE8F8;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;\}\
+:root\{--bg:#07101F;--s1:#0D1828;--s2:#132032;--bd:#1E3050;--txt:#DCE8F8;--dim:#5B789E;--acc:#4F9EFF;--grn:#2ED573;--red:#FF4757;--yel:#FFD460;--pur:#B39DDB;\}\
+.app\{max-width:860px;margin:0 auto;padding:20px 14px 80px;\}\
+.hdr\{text-align:center;padding:40px 0 28px;border-bottom:1px solid var(--bd);margin-bottom:28px;\}\
+.htag\{display:inline-block;background:#4F9EFF14;border:1px solid #4F9EFF44;color:var(--acc);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;padding:5px 15px;border-radius:20px;margin-bottom:16px;\}\
+.hdr h1\{font-size:clamp(22px,5vw,40px);font-weight:800;background:linear-gradient(135deg,#DCE8F8 40%,#4F9EFF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.2;margin-bottom:6px;\}\
+.hdr p\{color:var(--dim);font-size:13px;\}\
+.tabs\{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;\}\
+.tab\{padding:6px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--s1);cursor:pointer;font-size:12px;font-weight:600;transition:all .15s;display:flex;align-items:center;gap:5px;color:var(--dim);\}\
+.tab:hover\{border-color:#4F9EFF55;color:var(--txt);\}\
+.tab.on\{border-color:var(--pc);background:color-mix(in srgb,var(--pc) 14%,transparent);color:var(--txt);\}\
+.dot\{width:6px;height:6px;border-radius:50%;background:var(--pc);flex-shrink:0;\}\
+.pct-lbl\{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);\}\
+.quiz\{animation:fu .25s ease;\}\
+@keyframes fu\{from\{opacity:0;transform:translateY(6px)\}to\{opacity:1;transform:translateY(0)\}\}\
+.qhdr\{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:14px;\}\
+.qtit\{font-size:15px;font-weight:700;\}\
+.qmeta\{display:flex;gap:8px;align-items:center;\}\
+.sc\{background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:4px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;display:flex;gap:6px;align-items:center;\}\
+.scn\{color:var(--grn);font-size:14px;font-weight:700;\}\
+.qct\{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);\}\
+.pbar\{height:3px;background:var(--s2);border-radius:2px;margin-bottom:18px;overflow:hidden;\}\
+.pfill\{height:100%;border-radius:2px;background:var(--pc);transition:width .3s;\}\
+.srow\{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim);background:var(--s1);border-radius:8px;padding:8px 12px;margin-bottom:16px;border:1px solid var(--bd);\}\
+.sw\{width:34px;height:19px;background:var(--bd);border-radius:10px;cursor:pointer;transition:background .2s;position:relative;flex-shrink:0;\}\
+.sw.on\{background:var(--grn);\}\
+.sw::after\{content:'';position:absolute;width:13px;height:13px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s;\}\
+.sw.on::after\{transform:translateX(15px);\}\
+.card\{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:22px;margin-bottom:14px;\}\
+.qid\{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:8px;letter-spacing:1px;\}\
+.inst\{font-size:12px;color:var(--dim);background:var(--s2);border-left:3px solid var(--pc);padding:8px 12px;border-radius:0 7px 7px 0;margin-bottom:16px;line-height:1.6;\}\
+.qt\{font-size:15px;line-height:1.85;color:var(--txt);background:var(--s2);border-radius:9px;padding:15px 17px;margin-bottom:14px;white-space:pre-wrap;\}\
+.qt.blur\{filter:blur(5px);user-select:none;cursor:pointer;\}\
+.scram\{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--pur);background:#B39DDB12;border:1px solid #B39DDB33;border-radius:9px;padding:12px 15px;margin-bottom:12px;line-height:1.7;\}\
+.dlg\{background:var(--s2);border-radius:9px;padding:13px 16px;margin-bottom:12px;font-size:13px;line-height:1.8;white-space:pre-line;\}\
+.qq\{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:12px;\}\
+.ft\{font-size:15px;line-height:1.9;margin-bottom:12px;\}\
+.blank\{display:inline-block;min-width:80px;border-bottom:2px solid var(--pc);margin:0 3px;vertical-align:bottom;text-align:center;color:var(--pc);font-weight:700;padding:0 5px;\}\
+textarea.inp,input.inp\{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 13px;font-size:13px;color:var(--txt);font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border .15s;margin-bottom:10px;resize:vertical;\}\
+textarea.inp:focus,input.inp:focus\{border-color:var(--acc);\}\
+textarea.inp.ok,input.inp.ok\{border-color:var(--grn);background:#2ED57310;\}\
+textarea.inp.err,input.inp.err\{border-color:var(--red);background:#FF475710;\}\
+.rev\{background:var(--s2);border-radius:9px;padding:11px 14px;margin-bottom:11px;display:flex;gap:8px;align-items:flex-start;\}\
+.rl\{color:var(--dim);font-size:11px;white-space:nowrap;padding-top:2px;flex-shrink:0;\}\
+.rv\{color:var(--grn);font-weight:600;font-size:13px;line-height:1.6;\}\
+.rv.pur\{color:var(--pur);\}\
+.fbk\{margin-top:8px;font-size:12px;font-weight:700;\}\
+.fbk.ok\{color:var(--grn);\}\
+.fbk.err\{color:var(--red);\}\
+.brow\{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;\}\
+.btn\{padding:7px 14px;border:none;border-radius:7px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;transition:all .13s;display:inline-flex;align-items:center;gap:5px;\}\
+.btn:disabled\{opacity:.35;cursor:not-allowed;\}\
+.bp\{background:var(--acc);color:#030C1A;\}\
+.bp:not(:disabled):hover\{filter:brightness(1.1);transform:translateY(-1px);\}\
+.bs\{background:var(--s2);color:var(--txt);border:1px solid var(--bd);\}\
+.bs:not(:disabled):hover\{border-color:var(--acc);color:var(--acc);\}\
+.bspk\{background:linear-gradient(135deg,#1a6b2f,#26a040);color:#fff;\}\
+.bspk.ing\{background:linear-gradient(135deg,#7a4e00,#b07200);animation:pls .7s ease infinite;\}\
+@keyframes pls\{0%,100%\{opacity:1\}50%\{opacity:.6\}\}\
+.bok\{background:var(--grn);color:#030D0A;\}\
+.bbad\{background:var(--red);color:#fff;\}\
+.nav\{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px;\}\
+.tbr\{height:5px;background:var(--s2);border-radius:3px;margin-bottom:12px;overflow:hidden;\}\
+.tf\{height:100%;border-radius:3px;background:var(--grn);transition:width .1s linear;\}\
+.tf.w\{background:var(--yel);\}\
+.tf.c\{background:var(--red);\}\
+.tt\{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);margin-bottom:8px;\}\
+.ptm\{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--yel);margin-bottom:9px;\}\
+.done\{text-align:center;padding:50px 20px;animation:fu .4s ease;\}\
+.dn\{font-family:'JetBrains Mono',monospace;font-size:56px;font-weight:700;color:var(--grn);line-height:1;margin-bottom:8px;\}\
+.done h2\{font-size:22px;font-weight:800;margin-bottom:8px;\}\
+.done p\{color:var(--dim);margin-bottom:24px;font-size:13px;\}\
+@media(max-width:480px)\{.card\{padding:15px 12px;\}.qt\{font-size:14px;\}.btn\{padding:6px 12px;font-size:11px;\}\}\
+`;\
+\
+export default function App() \{\
+  const [part,setPart]=useState("A");\
+  const [shuf,setShuf]=useState(false);\
+  const [qs,setQs]=useState([...QA]);\
+  const [qi,setQi]=useState(0);\
+  const [showAns,setShowAns]=useState(false);\
+  const [inp,setInp]=useState("");\
+  const [inp2,setInp2]=useState("");\
+  const [chk,setChk]=useState(false);\
+  const [ok,setOk]=useState(null);\
+  const [spk,setSpk]=useState(false);\
+  const [score,setScore]=useState(\{c:0,t:0\});\
+  const [done,setDone]=useState(false);\
+  const [showTxt,setShowTxt]=useState(true);\
+  const [typOn,setTypOn]=useState(false);\
+  const [typSec,setTypSec]=useState(60);\
+  const typRef=useRef(null);\
+  const [pVis,setPVis]=useState(false);\
+  const [pSec,setPSec]=useState(30);\
+  const [pGone,setPGone]=useState(false);\
+  const [wSec,setWSec]=useState(90);\
+  const pRef=useRef(null),wRef=useRef(null);\
+\
+  const pd=PARTS[part];\
+  const q=qs[qi];\
+\
+  useEffect(()=>\{\
+    const list=shuf?shuffle(pd.qs):[...pd.qs];\
+    setQs(list);setQi(0);reset();setScore(\{c:0,t:0\});setDone(false);\
+  \},[part,shuf]);\
+\
+  function reset()\{\
+    setShowAns(false);setInp("");setInp2("");setChk(false);setOk(null);\
+    setShowTxt(!["B","G"].includes(part));\
+    window.speechSynthesis?.cancel();setSpk(false);\
+    clearInterval(typRef.current);setTypOn(false);setTypSec(60);\
+    clearInterval(pRef.current);clearInterval(wRef.current);\
+    setPVis(false);setPGone(false);setPSec(30);setWSec(90);\
+  \}\
+\
+  function doSpeak(txt,rate=0.85)\{setSpk(true);speak(txt,rate,()=>setSpk(false));\}\
+\
+  function startTyp()\{\
+    setTypOn(true);setTypSec(60);\
+    clearInterval(typRef.current);\
+    typRef.current=setInterval(()=>setTypSec(s=>\{if(s<=1)\{clearInterval(typRef.current);setTypOn(false);return 0;\}return s-1;\}),1000);\
+  \}\
+\
+  function startPass()\{\
+    setPVis(true);setPSec(30);setPGone(false);\
+    clearInterval(pRef.current);\
+    pRef.current=setInterval(()=>setPSec(s=>\{\
+      if(s<=1)\{clearInterval(pRef.current);setPGone(true);setWSec(90);\
+        wRef.current=setInterval(()=>setWSec(ws=>\{if(ws<=1)\{clearInterval(wRef.current);return 0;\}return ws-1;\}),1000);\
+        return 0;\}return s-1;\}),1000);\
+  \}\
+\
+  function check()\{\
+    if(!inp.trim())return;\
+    const ans=(q.a||q.text||"").toLowerCase().replace(/[.,!?'"]/g,"").trim();\
+    const usr=inp.toLowerCase().replace(/[.,!?'"]/g,"").trim();\
+    const good=usr===ans||ans.includes(usr.slice(0,Math.min(8,usr.length)))||usr.includes(ans.slice(0,6));\
+    setOk(good);setChk(true);setShowAns(true);\
+    setScore(s=>(\{c:s.c+(good?1:0),t:s.t+1\}));\
+  \}\
+\
+  function next()\{if(qi+1>=qs.length)\{setDone(true);return;\}setQi(i=>i+1);reset();\}\
+  function prev()\{if(qi===0)return;setQi(i=>i-1);reset();\}\
+  function markOk()\{setScore(s=>(\{c:s.c+1,t:s.t+1\}));next();\}\
+  function markBad()\{setScore(s=>(\{c:s.c,t:s.t+1\}));next();\}\
+  function restart()\{const list=shuf?shuffle(pd.qs):[...pd.qs];setQs(list);setQi(0);reset();setScore(\{c:0,t:0\});setDone(false);\}\
+\
+  const pct=Math.round((score.c/Math.max(score.t,1))*100);\
+  const isOral=["A","B"].includes(part);\
+  const needInp=["C","F","G"].includes(part);\
+\
+  // Format dialogue with line breaks for M:/W: speakers\
+  function fmtDlg(s)\{\
+    return s.replace(/(M:|W:|\uc0\u30002 :|\u20057 :)/g,'\\n$1').replace(/^\\n/,'');\
+  \}\
+\
+  return(<>\
+    <style>\{CSS\}</style>\
+    <div className="app">\
+      <div className="hdr">\
+        <div className="htag">VEPT \uc0\u32508 \u21512 \u39064 \u24211 \u32451 \u20064 \u31995 \u32479 </div>\
+        <h1>Versant English Proficiency Test</h1>\
+        <p>\uc0\u20840 9\u22823 \u39064 \u22411 \u23436 \u25972 \u39064 \u24211  \'b7 B\u37096 <strong>276</strong>\u39064  \'b7 C\u37096 <strong>154</strong>\u39064  \'b7 D\u37096 <strong>91</strong>\u39064  \'b7 F\u37096 <strong>50</strong>\u39064  \'b7 G\u37096 <strong>176</strong>\u39064  \'b7 \u20840 \u31243 \u35821 \u38899 \u25903 \u25345 </p>\
+      </div>\
+\
+      <div className="tabs">\
+        \{Object.entries(PARTS).map(([k,p])=>(\
+          <div key=\{k\} className=\{`tab $\{part===k?"on":""\}`\} style=\{\{"--pc":p.color\}\} onClick=\{()=>setPart(k)\}>\
+            <span className="dot"/><span>\{p.icon\} \{p.label\}</span><span className="pct-lbl">\{p.pct\}</span>\
+          </div>\
+        ))\}\
+      </div>\
+\
+      \{!done?(\
+        <div className="quiz" style=\{\{"--pc":pd.color\}\}>\
+          <div className="qhdr">\
+            <div className="qtit">\{pd.icon\} \{pd.name\}</div>\
+            <div className="qmeta">\
+              <div className="sc"><span className="scn">\{score.c\}</span>/\{score.t\} \uc0\u31572 \u23545 </div>\
+              <div className="qct">\{qi+1\}/\{qs.length\}</div>\
+            </div>\
+          </div>\
+          <div className="pbar"><div className="pfill" style=\{\{width:`$\{(qi/qs.length)*100\}%`\}\}/></div>\
+\
+          <div className="srow">\
+            <div className=\{`sw $\{shuf?"on":""\}`\} onClick=\{()=>setShuf(s=>!s)\}/>\
+            <span>\uc0\u38543 \u26426 \u39034 \u24207  \{shuf?"\u10003  \u24050 \u24320 \u21551 ":"\u65288 \u20851 \u38381 \u65289 "\}</span>\
+            <span style=\{\{marginLeft:"auto",fontSize:11,color:"var(--dim)"\}\}>\uc0\u20849 \{qs.length\}\u39064 </span>\
+          </div>\
+\
+          <div className="card">\
+            <div className="qid">\{q.id\} \'b7 \{pd.label\}</div>\
+            <div className="inst">\{pd.inst\}</div>\
+\
+            \{part==="A"&&<>\
+              <div className="qt">\{q.text\}</div>\
+              <div className="brow">\
+                <button className=\{`btn bspk $\{spk?"ing":""\}`\} onClick=\{()=>doSpeak(q.text,0.8)\}>\{spk?"\uc0\u55357 \u56586  \u25773 \u25918 \u20013 ...":"\u55357 \u56586  \u25773 \u25918 \u33539 \u35835 "\}</button>\
+                <button className="btn bs" onClick=\{()=>doSpeak(q.text,0.62)\}>\uc0\u55357 \u56354  \u24930 \u36895 </button>\
+              </div>\
+            </>\}\
+\
+            \{part==="B"&&<>\
+              <div className=\{`qt $\{!showTxt?"blur":""\}`\} onClick=\{()=>!showTxt&&setShowTxt(true)\}>\{q.text\}</div>\
+              <div className="brow">\
+                <button className=\{`btn bspk $\{spk?"ing":""\}`\} onClick=\{()=>\{setShowTxt(false);doSpeak(q.text,0.82);\}\}>\{spk?"\uc0\u55357 \u56586  \u25773 \u25918 \u20013 ...":"\u55357 \u56586  \u21548 \u21477 \u23376 \u65288 \u38544 \u34255 \u25991 \u23383 \u65289 "\}</button>\
+                <button className="btn bs" onClick=\{()=>setShowTxt(s=>!s)\}>\{showTxt?"\uc0\u55357 \u56904  \u38544 \u34255 ":"\u55357 \u56385  \u26174 \u31034 "\}</button>\
+              </div>\
+            </>\}\
+\
+            \{part==="C"&&<>\
+              <div className="scram">\uc0\u55357 \u56576  \u35789 \u32452 \u65306 \{q.s\}</div>\
+              <div className="brow" style=\{\{marginBottom:12\}\}>\
+                <button className=\{`btn bspk $\{spk?"ing":""\}`\} onClick=\{()=>doSpeak(q.s.replace(/\\//g,","),0.8)\}>\{spk?"\uc0\u55357 \u56586  \u25773 \u25918 \u20013 ...":"\u55357 \u56586  \u21548 \u35789 \u32452 "\}</button>\
+              </div>\
+              \{!showAns&&<>\
+                <textarea className=\{`inp $\{chk?(ok?"ok":"err"):""\}`\} rows=\{2\} placeholder="\uc0\u23558 \u35789 \u32452 \u25490 \u21015 \u25104 \u27491 \u30830 \u21477 \u23376 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\} onKeyDown=\{e=>\{if(e.key==="Enter"&&!e.shiftKey)\{e.preventDefault();check();\}\}\}/>\
+                <div className="brow">\
+                  <button className="btn bp" onClick=\{check\}>\uc0\u10003  \u26816 \u26597 \u31572 \u26696 </button>\
+                  <button className="btn bs" onClick=\{()=>setShowAns(true)\}>\uc0\u55357 \u56385  \u30452 \u25509 \u26597 \u30475 </button>\
+                </div>\
+              </>\}\
+              \{showAns&&<div className="rev"><span className="rl">\uc0\u9989  \u31572 \u26696 \u65306 </span><span className="rv">\{q.a\}</span></div>\}\
+              \{chk&&<div className=\{`fbk $\{ok?"ok":"err"\}`\}>\{ok?"\uc0\u55356 \u57225  \u22238 \u31572 \u27491 \u30830 \u65281 ":"\u10060  \u31572 \u26696 \u26377 \u35823 "\}</div>\}\
+              \{showAns&&<div className="brow" style=\{\{marginTop:10\}\}><button className="btn bspk" onClick=\{()=>doSpeak(q.a)\}>\uc0\u55357 \u56586  \u21548 \u27491 \u30830 \u31572 \u26696 </button></div>\}\
+            </>\}\
+\
+            \{part==="D"&&<>\
+              <div className="dlg">\{fmtDlg(q.dlg)\}</div>\
+              <div className="qq">\uc0\u10067  \{q.q\}</div>\
+              <div className="brow" style=\{\{marginBottom:12\}\}>\
+                <button className=\{`btn bspk $\{spk?"ing":""\}`\} onClick=\{()=>doSpeak(q.dlg,0.85)\}>\{spk?"\uc0\u55357 \u56586  \u25773 \u25918 \u20013 ...":"\u55357 \u56586  \u21548 \u23545 \u35805 "\}</button>\
+                <button className="btn bs" onClick=\{()=>doSpeak(q.q)\}>\uc0\u55357 \u56586  \u21548 \u38382 \u39064 </button>\
+              </div>\
+              \{!showAns&&<>\
+                <input className="inp" type="text" placeholder="\uc0\u36755 \u20837 \u20851 \u38190 \u35789 \u31572 \u26696 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\} onKeyDown=\{e=>\{if(e.key==="Enter")setShowAns(true);\}\}/>\
+                <div className="brow"><button className="btn bp" onClick=\{()=>setShowAns(true)\}>\uc0\u10003  \u26597 \u30475 \u31572 \u26696 </button></div>\
+              </>\}\
+              \{showAns&&<div className="rev"><span className="rl">\uc0\u9989  \u21442 \u32771 \u31572 \u26696 \u65306 </span><span className="rv">\{q.a\}</span></div>\}\
+            </>\}\
+\
+            \{part==="E"&&<>\
+              <div className="qt">\{q.text\}</div>\
+              \{!typOn&&typSec===60&&<div className="brow" style=\{\{marginBottom:12\}\}><button className="btn bp" onClick=\{startTyp\}>\uc0\u9201  \u24320 \u22987 \u35745 \u26102 \u65288 60\u31186 \u65289 </button></div>\}\
+              \{(typOn||typSec<60)&&<>\
+                <div className="tt">\uc0\u21097 \u20313 \u65306 \{typSec\}\u31186 </div>\
+                <div className="tbr"><div className=\{`tf $\{typSec<20?"c":typSec<35?"w":""\}`\} style=\{\{width:`$\{(typSec/60)*100\}%`\}\}/></div>\
+              </>\}\
+              <textarea className="inp" rows=\{4\} placeholder="\uc0\u35831 \u22312 \u27492 \u36755 \u20837 \u20320 \u30475 \u21040 \u30340 \u25991 \u23383 \u65292 \u36234 \u24555 \u36234 \u22909 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\}/>\
+              \{typSec===0&&<div className="fbk ok">\uc0\u9200  \u26102 \u38388 \u21040 \u65281 \u20849 \u36755 \u20837  \{inp.split(/\\s+/).filter(Boolean).length\} \u20010 \u21333 \u35789 </div>\}\
+            </>\}\
+\
+            \{part==="F"&&<>\
+              <div className="brow" style=\{\{marginBottom:12\}\}>\
+                <button className=\{`btn bspk $\{spk?"ing":""\}`\} onClick=\{()=>doSpeak(q.t.replace("_____","blank"),0.85)\}>\{spk?"\uc0\u55357 \u56586  \u25773 \u25918 \u20013 ...":"\u55357 \u56586  \u21548 \u21477 \u23376 "\}</button>\
+              </div>\
+              <div className="ft">\
+                \{q.t.split("_____").map((seg,i,arr)=>(\
+                  <span key=\{i\}>\{seg\}\{i<arr.length-1&&<span className="blank">\{showAns?q.a:"___"\}</span>\}</span>\
+                ))\}\
+              </div>\
+              \{!showAns&&<>\
+                <input className=\{`inp $\{chk?(ok?"ok":"err"):""\}`\} type="text" placeholder="\uc0\u22635 \u20889 \u32570 \u22833 \u30340 \u21333 \u35789 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\} onKeyDown=\{e=>\{if(e.key==="Enter")check();\}\}/>\
+                <div className="brow">\
+                  <button className="btn bp" onClick=\{check\}>\uc0\u10003  \u26816 \u26597 </button>\
+                  <button className="btn bs" onClick=\{()=>setShowAns(true)\}>\uc0\u55357 \u56385  \u26597 \u30475 \u31572 \u26696 </button>\
+                </div>\
+              </>\}\
+              \{showAns&&<><div className="rev"><span className="rl">\uc0\u31572 \u26696 \u65306 </span><span className="rv">\{q.a\}</span></div>\
+                <div className="brow"><button className="btn bspk" onClick=\{()=>doSpeak(q.t.replace("_____",q.a))\}>\uc0\u55357 \u56586  \u21548 \u23436 \u25972 \u21477 \u23376 </button></div>\
+              </>\}\
+              \{chk&&<div className=\{`fbk $\{ok?"ok":"err"\}`\}>\{ok?"\uc0\u55356 \u57225  \u27491 \u30830 \u65281 ":"\u10060  \u31572 \u26696 \u26377 \u35823 "\}</div>\}\
+            </>\}\
+\
+            \{part==="G"&&<>\
+              <div className="brow" style=\{\{marginBottom:12\}\}>\
+                <button className=\{`btn bspk $\{spk?"ing":""\}`\} onClick=\{()=>\{setShowTxt(false);doSpeak(q.text,0.8);\}\}>\{spk?"\uc0\u55357 \u56586  \u25773 \u25918 \u20013 ...":"\u55357 \u56586  \u21548 \u21477 \u23376 \u65288 \u38544 \u34255 \u25991 \u23383 \u65289 "\}</button>\
+                <button className="btn bs" onClick=\{()=>doSpeak(q.text,0.62)\}>\uc0\u55357 \u56354  \u24930 \u36895 \u20877 \u21548 </button>\
+                <button className="btn bs" onClick=\{()=>setShowTxt(s=>!s)\}>\{showTxt?"\uc0\u55357 \u56904  \u38544 \u34255 \u21407 \u21477 ":"\u55357 \u56385  \u26174 \u31034 \u21407 \u21477 "\}</button>\
+              </div>\
+              \{showTxt&&<div className="qt">\{q.text\}</div>\}\
+              \{!showAns&&<>\
+                <textarea className=\{`inp $\{chk?(ok?"ok":"err"):""\}`\} rows=\{2\} placeholder="\uc0\u25340 \u20889 \u24744 \u21548 \u21040 \u30340 \u21477 \u23376 \u65288 \u27880 \u24847 \u22823 \u23567 \u20889 \u21644 \u26631 \u28857 \u65289 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\} onKeyDown=\{e=>\{if(e.key==="Enter"&&!e.shiftKey)\{e.preventDefault();check();\}\}\}/>\
+                <div className="brow">\
+                  <button className="btn bp" onClick=\{check\}>\uc0\u10003  \u26680 \u23545 </button>\
+                  <button className="btn bs" onClick=\{()=>\{setShowAns(true);setShowTxt(true);\}\}>\uc0\u55357 \u56385  \u26174 \u31034 \u21407 \u21477 </button>\
+                </div>\
+              </>\}\
+              \{showAns&&<div className="rev"><span className="rl">\uc0\u9989  \u21407 \u21477 \u65306 </span><span className="rv">\{q.text\}</span></div>\}\
+              \{chk&&<div className=\{`fbk $\{ok?"ok":"err"\}`\}>\{ok?"\uc0\u55356 \u57225  \u23436 \u20840 \u27491 \u30830 \u65281 ":"\u10060  \u26377 \u35823 \u65292 \u35831 \u30475 \u21407 \u21477 "\}</div>\}\
+            </>\}\
+\
+            \{part==="H"&&<>\
+              \{!pVis&&!pGone&&<div className="brow" style=\{\{marginBottom:12\}\}><button className="btn bp" onClick=\{startPass\}>\uc0\u9654  \u24320 \u22987 \u38405 \u35835 \u65288 30\u31186 \u35745 \u26102 \u65289 </button></div>\}\
+              \{pVis&&!pGone&&<><div className="ptm">\uc0\u9201  \u38405 \u35835 \u26102 \u38388 \u65306 \{pSec\}\u31186 \u65288 \u35831 \u35748 \u30495 \u38405 \u35835 \u65289 </div><div className="qt">\{q.passage\}</div></>\}\
+              \{pGone&&<>\
+                <div className="ptm">\uc0\u9997 \u65039  \u20889 \u20316 \u26102 \u38388 \u21097 \u20313 \u65306 \{wSec\}\u31186 \u65288 \u21407 \u25991 \u24050 \u28040 \u22833 \u65289 </div>\
+                <textarea className="inp" rows=\{5\} placeholder="\uc0\u25353 \u29031 \u33258 \u24049 \u30340 \u29702 \u35299 \u21465 \u36848 \u36825 \u27573 \u30701 \u25991 \u65292 \u29992 \u33258 \u24049 \u30340 \u35805 \u65292 \u26080 \u38656 \u36880 \u23383 \u32972 \u35829 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\}/>\
+                \{!showAns&&<div className="brow"><button className="btn bp" onClick=\{()=>setShowAns(true)\}>\uc0\u10003  \u26597 \u30475 \u21442 \u32771 \u33539 \u25991 </button></div>\}\
+                \{showAns&&<div className="rev"><span className="rl">\uc0\u21442 \u32771 \u65306 </span><span className="rv pur">\{q.model\}</span></div>\}\
+              </>\}\
+            </>\}\
+\
+            \{part==="I"&&<>\
+              <div style=\{\{fontWeight:700,fontSize:14,marginBottom:10,color:"var(--acc)"\}\}>\uc0\u55357 \u56516  \{q.title\}</div>\
+              <div className="qt" style=\{\{fontSize:13,whiteSpace:"pre-line",marginBottom:14\}\}>\{q.passage\}</div>\
+              \{!showAns&&<>\
+                <div style=\{\{fontSize:12,color:"var(--dim)",marginBottom:6,fontWeight:700\}\}>\uc0\u55357 \u56541  \u20320 \u30340 \u24635 \u32467 \u65288 25-50\u35789 \u65289 \u65306 </div>\
+                <textarea className="inp" rows=\{3\} placeholder="\uc0\u29992 25-50\u20010 \u21333 \u35789 \u24635 \u32467 \u20316 \u32773 \u30340 \u20027 \u35201 \u35266 \u28857 ..." value=\{inp\} onChange=\{e=>setInp(e.target.value)\}/>\
+                <div style=\{\{fontSize:12,color:"var(--dim)",marginBottom:6,fontWeight:700,marginTop:2\}\}>\uc0\u55357 \u56492  \u20320 \u30340 \u35266 \u28857 \u65288 \u33267 \u23569 50\u35789 \u65289 \u65306 </div>\
+                <textarea className="inp" rows=\{5\} placeholder="\uc0\u29992 \u33267 \u23569 50\u20010 \u21333 \u35789 \u34920 \u36798 \u20320 \u23545 \u35813 \u35805 \u39064 \u30340 \u35266 \u28857 ..." value=\{inp2\} onChange=\{e=>setInp2(e.target.value)\}/>\
+                <div className="brow"><button className="btn bp" onClick=\{()=>setShowAns(true)\}>\uc0\u10003  \u26597 \u30475 \u21442 \u32771 \u33539 \u25991 </button></div>\
+              </>\}\
+              \{showAns&&<>\
+                <div className="rev" style=\{\{marginBottom:8\}\}><span className="rl">\uc0\u55357 \u56541  \u24635 \u32467 \u33539 \u25991 \u65306 </span><span className="rv" style=\{\{fontSize:13\}\}>\{q.summary\}</span></div>\
+                <div className="rev"><span className="rl">\uc0\u55357 \u56492  \u35266 \u28857 \u33539 \u25991 \u65306 </span><span className="rv pur" style=\{\{fontSize:13,whiteSpace:"pre-line"\}\}>\{q.opinion\}</span></div>\
+              </>\}\
+            </>\}\
+          </div>\
+\
+          <div className="nav">\
+            <button className="btn bs" onClick=\{prev\} disabled=\{qi===0\}>\uc0\u8592  \u19978 \u19968 \u39064 </button>\
+            \{isOral&&<div className="brow">\
+              <button className="btn bbad" onClick=\{markBad\}>\uc0\u10007  \u27809 \u35828 \u22909 </button>\
+              <button className="btn bok" onClick=\{markOk\}>\uc0\u10003  \u35828 \u23545 \u20102 </button>\
+            </div>\}\
+            \{(needInp||part==="D"||part==="E"||part==="H"||part==="I")&&(\
+              <button className="btn bp" onClick=\{next\} disabled=\{!showAns&&!chk&&!(part==="E"&&typSec===0)\}>\uc0\u19979 \u19968 \u39064  \u8594 </button>\
+            )\}\
+          </div>\
+        </div>\
+      ):(\
+        <div className="done">\
+          <div className="dn">\{pct\}%</div>\
+          <h2>\uc0\u55356 \u57225  \{pd.label\} \u23436 \u25104 \u65281 </h2>\
+          <p>\{pd.name\}<br/>\uc0\u20849  \{score.t\} \u39064  \'b7 \u31572 \u23545  <strong style=\{\{color:"var(--grn)"\}\}>\{score.c\}</strong> \u39064 </p>\
+          <div className="brow" style=\{\{justifyContent:"center"\}\}>\
+            <button className="btn bp" onClick=\{restart\}>\uc0\u55357 \u56580  \u20877 \u32451 \u19968 \u27425 </button>\
+            <button className="btn bs" onClick=\{()=>\{const ks=Object.keys(PARTS);setPart(ks[(ks.indexOf(part)+1)%ks.length]);\}\}>\uc0\u8594  \u19979 \u19968 \u31456 \u33410 </button>\
+          </div>\
+        </div>\
+      )\}\
+    </div>\
+  </>);\
+\}}
