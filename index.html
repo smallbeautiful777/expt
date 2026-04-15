@@ -1,27 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>Test Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VEPT 全题库模拟练习</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-        .page { display: none; padding: 20px; text-align: center; }
-        .active { display: block; }
-        button { padding: 10px 20px; background: blue; color: white; border: none; cursor: pointer; }
+        :root { --blu: #2563eb; --grn: #22c55e; }
+        body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; }
+        .btn { padding: 12px 24px; border-radius: 12px; font-weight: 700; transition: all 0.2s; cursor: pointer; }
+        .btn-primary { background: var(--blu); color: white; }
+        .btn-outline { border: 2px solid #e2e8f0; color: #64748b; }
+        .card { background: white; border-radius: 24px; shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
+    <div id="root"></div>
 
-    <div id="p1" class="page active">
-        <h1>这是第 1 页：Read Aloud</h1>
-        <p>如果点击下面的按钮能跳到第 2 页，说明成功了！</p>
-        <button onclick="document.getElementById('p1').style.display='none';document.getElementById('p2').style.display='block';">下一题</button>
-    </div>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
 
-    <div id="p2" class="page">
-        <h1>这是第 2 页：Repeat Sentence</h1>
-        <p>🎉 看到这一页，说明你的浏览器“电路”通了！</p>
-        <button onclick="location.reload()">重新开始</button>
-    </div>
+        // 这里是根据你文件里提取的核心题库数据（由于篇幅，我先放入 Part B 和 Part C）
+        const QB = [
+            {id:"B1",text:"Scientists haven't found a cure for cancer yet.", part:"B"},
+            {id:"B2",text:"He is not as intelligent as his older brother.", part:"B"},
+            {id:"B3",text:"I remember my mother teaching me the alphabet.", part:"B"},
+            {id:"C1",text:"What is the capital of France?", ans:"Paris", part:"C"},
+            {id:"C2",text:"How many days are there in a week?", ans:"Seven", part:"C"}
+            // ... 更多题目可以按这个格式继续添加
+        ];
 
+        function App() {
+            const [index, setIndex] = useState(0);
+            const [showAns, setShowAns] = useState(false);
+
+            const currentQ = QB[index];
+
+            const next = () => {
+                if (index < QB.length - 1) {
+                    setIndex(index + 1);
+                    setShowAns(false);
+                }
+            };
+
+            const speak = (text) => {
+                const utt = new SpeechSynthesisUtterance(text);
+                utt.lang = "en-US";
+                window.speechSynthesis.speak(utt);
+            };
+
+            return (
+                <div className="max-w-2xl mx-auto py-10 px-4">
+                    <div className="card p-8 shadow-xl bg-white">
+                        <div className="flex justify-between items-center mb-6">
+                            <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                                Part {currentQ.part} - Question {index + 1}
+                            </span>
+                            <span className="text-slate-400 text-sm">{index + 1} / {QB.length}</span>
+                        </div>
+
+                        <div className="min-h-[200px] flex flex-col justify-center border-y border-slate-100 py-10">
+                            <h2 className="text-2xl font-medium text-slate-800 leading-relaxed text-center">
+                                {currentQ.text}
+                            </h2>
+                            {showAns && currentQ.ans && (
+                                <p className="mt-6 text-center text-green-600 font-bold text-xl">
+                                    Answer: {currentQ.ans}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="mt-8 grid grid-cols-2 gap-4">
+                            <button onClick={() => speak(currentQ.text)} className="btn btn-outline">🔊 播放音频</button>
+                            <button onClick={() => setShowAns(!showAns)} className="btn btn-outline">👁️ 显示答案</button>
+                            <button onClick={() => setIndex(Math.max(0, index - 1))} className="btn btn-outline col-span-1">上一题</button>
+                            <button onClick={next} className="btn btn-primary col-span-1">下一题</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
